@@ -290,3 +290,14 @@ section{position:relative;z-index:2}
   .hero-screenshot{animation:none}
   .bg-aurora{animation:none}
 }
+
+/* === COPY COMMAND === */
+.copy-cmd{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;background:var(--bg-2);border:1px solid var(--line-strong);cursor:pointer;position:relative;transition:border-color .2s,background .2s}
+.copy-cmd:hover{border-color:var(--violet-300);background:var(--bg-3)}
+.copy-cmd code{font-family:'Geist Mono',ui-monospace,monospace;font-size:15px;color:var(--ink-0);user-select:all}
+.copy-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer;transition:color .2s,background .2s}
+.copy-cmd:hover .copy-btn{color:var(--violet-300);background:rgba(139,92,246,0.1)}
+.copy-toast{position:absolute;top:-30px;left:50%;transform:translateX(-50%);padding:4px 10px;border-radius:6px;background:var(--violet-300);color:#fff;font-size:12px;font-weight:500;white-space:nowrap;animation:toast-in .2s ease-out}
+@keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(4px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+[data-theme="light"] .copy-cmd{background:var(--bg-1);border-color:var(--line)}
+[data-theme="light"] .copy-cmd:hover{background:var(--bg-2);border-color:var(--violet-300)}
