@@ -572,7 +572,7 @@ function Footer(){
           <span style={{color:'var(--ink-4)'}}>v0.4.6 · <span style={{color:'var(--accent-lime)'}}>● operational</span></span>
         </div>
         <div className="footer-links">
-          <a href="#download">{t('footer.download')}</a>
+          <a href="#download" onClick={e=>{e.preventDefault();document.getElementById('download')?.scrollIntoView({behavior:'smooth'})}}>{t('footer.download')}</a>
           <a href="docs/">{t('footer.docs')}</a>
         </div>
       </div>
