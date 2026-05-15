@@ -9,3 +9,4 @@ spec-ade-landing 3/
 node_modules/
 .env
 .env.local
+openspec/

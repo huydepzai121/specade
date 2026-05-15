@@ -15,31 +15,9 @@ Spec ADE có dạng ứng dụng desktop native qua Tauri v2, ngoài chế độ
 | **PWA** | Cài từ trình duyệt | Cửa sổ độc lập, không cần Tauri |
 | **Desktop (Tauri)** | Tải ứng dụng native | Trải nghiệm native đầy đủ |
 
-## Kiến trúc Tauri sidecar
+## Cách hoạt động
 
-Ứng dụng desktop sử dụng Tauri v2 với pattern **sidecar**:
-
-```
-┌─────────────────────────────┐
-│     Tauri Window (WebView)  │
-│     ┌───────────────────┐   │
-│     │   Vue 3 SPA       │   │
-│     │   (from dist/spa) │   │
-│     └───────────────────┘   │
-├─────────────────────────────┤
-│     Tauri Rust Shell        │
-│     ┌───────────────────┐   │
-│     │  Sidecar Process  │   │
-│     │  (spec-ade binary)│   │
-│     └───────────────────┘   │
-└─────────────────────────────┘
-```
-
-Tauri shell:
-1. Khởi động binary `spec-ade` backend dưới dạng sidecar process
-2. Chờ health endpoint phản hồi
-3. Tải SPA trong cửa sổ WebView native
-4. Quản lý vòng đời sidecar (start, health check, restart)
+Ứng dụng desktop đóng gói backend và UI của Spec ADE thành một ứng dụng native duy nhất. Nó tự động quản lý vòng đời backend — chỉ cần mở app và bắt đầu làm việc.
 
 ## Hỗ trợ nền tảng
 
@@ -64,20 +42,3 @@ Spec ADE cũng hoạt động như Progressive Web App:
 - **Cửa sổ độc lập** — chạy trong cửa sổ riêng không có chrome trình duyệt
 - **Push notification** — nhận thông báo khi tác vụ agent dài hoàn thành
 - **Cache offline** — asset tĩnh được cache qua Workbox service worker
-
-Build phiên bản PWA:
-```bash
-bun run build:pwa
-```
-
-## Build ứng dụng desktop
-
-```bash
-# Development
-cd src-tauri && bunx tauri dev --no-dev-server-wait
-
-# Production build
-cd src-tauri && bunx tauri build
-```
-
-Build tạo installer cho từng nền tảng trong `src-tauri/target/release/bundle/`.

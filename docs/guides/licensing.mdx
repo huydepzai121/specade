@@ -1,35 +1,19 @@
 ---
 title: Licensing
-description: License portal, activation workflow, and plan options.
+description: License activation workflow and plan options.
 ---
 
 # Licensing
 
-Spec ADE uses an offline license system based on Ed25519 digital signatures and JWT tokens. Licenses are tied to a specific machine via hardware fingerprint.
-
-## How it works
-
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│ License Portal│────▶│  .lic file   │────▶│  Spec ADE    │
-│ (generates)  │     │  (JWT token) │     │  (activates) │
-└──────────────┘     └──────────────┘     └──────────────┘
-```
-
-1. **Portal generates keypair** — Ed25519 private/public key pair stored in `~/.config/spec-ade-portal/`
-2. **Public key embedded in binary** — copied to `spec-ade-api/keys/license-public.key` before building
-3. **Portal signs licenses** — JWT tokens signed with the private key
-4. **Spec ADE verifies** — the embedded public key validates license tokens offline
+Spec ADE uses an offline license system based on digital signatures. Licenses are tied to a specific machine via hardware fingerprint.
 
 ## Activation flow
 
 1. Launch Spec ADE — if no license is active, the activation page appears
 2. Note the **machine fingerprint** displayed on the activation page
-3. Open the License Portal (`just portal-run` → `http://localhost:3000`)
-4. Enter the machine fingerprint and organization name
-5. Select a plan duration
-6. Download the `.lic` file or copy the JWT string
-7. Paste the JWT or upload the `.lic` file on Spec ADE's activation page
+3. Contact your license administrator to generate a license for your machine
+4. You will receive a `.lic` file or a JWT string
+5. Paste the JWT or upload the `.lic` file on Spec ADE's activation page
 
 ## Plans
 
@@ -40,35 +24,12 @@ Spec ADE uses an offline license system based on Ed25519 digital signatures and 
 | 3 years | 1095 days | 1095 |
 | 5 years | 1825 days | 1825 |
 
-## Key distribution
-
-For building Spec ADE with license verification:
-
-```bash
-# 1. Run the portal to generate keys (first run only)
-just portal-run
-
-# 2. Copy public key to the API project
-cp ~/.config/spec-ade-portal/public.key spec-ade-api/keys/license-public.key
-
-# 3. Build — public key is embedded at compile time
-just build-release
-```
-
-## License portal data
-
-| Item | Location |
-|------|----------|
-| Private key | `~/.config/spec-ade-portal/private.key` |
-| Public key | `~/.config/spec-ade-portal/public.key` |
-| License database | `~/.config/spec-ade-portal/licenses.db` (SQLite) |
-
 ## Offline verification
 
-Licenses are verified entirely offline — no network calls needed. The JWT token contains:
+Licenses are verified entirely offline — no network calls needed. The license token contains:
 - Machine fingerprint (must match current machine)
 - Organization name
 - Expiration date
-- Signature (Ed25519)
+- Digital signature
 
-The embedded public key verifies the signature. If the fingerprint matches and the token hasn't expired, the license is valid.
+If the fingerprint matches and the token hasn't expired, the license is valid.
