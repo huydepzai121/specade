@@ -1,516 +1,625 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra cứu mã số thuế &amp; thông tin doanh nghiệp Việt Nam | Masothuevn.Org</title>
-  <meta name="description" content="Tra cứu mã số thuế doanh nghiệp, cá nhân. Danh bạ hơn 900.000 doanh nghiệp Việt Nam. Tìm kiếm theo MST, tên công ty, người đại diện.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-/* === RESET & DESIGN TOKENS === */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --nav-blue:#2196F3;
-  --accent-green:#43A047;
-  --accent-amber:#D97706;
-  --accent-red:#E53935;
-  --bg-gray:#F8FAFC;
-  --bg-search:#F5F5F5;
-  --border:#E2E8F0;
-  --text-primary:#0F172A;
-  --text-secondary:#475569;
-  --text-tertiary:#94A3B8;
-  --link-blue:#1565C0;
-  --pill-active:#2196F3;
-  --pill-inactive:#E3F2FD;
-  --tag-amber-bg:#FEF3C7;
-  --tag-amber-text:#D97706;
-  --tag-red-bg:#FEE2E2;
-  --tag-red-text:#E53935;
-  --font-heading:'Be Vietnam Pro',system-ui,sans-serif;
-  --font-body:'Nunito Sans',system-ui,sans-serif;
-  --radius-sm:4px;
-  --radius-md:8px;
-}
-body{font-family:var(--font-body);background:#fff;color:var(--text-primary);line-height:1.5;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-ul,ol{list-style:none}
-img{max-width:100%;display:block}
-/* === HEADER === */
-.header-wrap{position:relative;z-index:100}
-.header-top{display:flex;align-items:center;justify-content:space-between;height:80px;padding:0 48px;background:#fff;border-bottom:1px solid var(--border)}
-.header-left{display:flex;align-items:center;gap:8px}
-.logo-text{font-family:var(--font-heading);font-size:22px;font-weight:700;color:var(--nav-blue)}
-.logo-text .org{color:var(--accent-amber)}
-.logo-tagline{font-size:11px;color:var(--text-tertiary);margin-top:-2px}
-.header-right{display:flex;align-items:center;gap:20px}
-.header-contact{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary)}
-.header-contact svg{width:16px;height:16px;color:var(--text-tertiary);flex-shrink:0}
-.btn-login{font-family:var(--font-heading);font-size:13px;font-weight:600;color:#fff;background:var(--nav-blue);border:none;border-radius:var(--radius-sm);padding:8px 16px;cursor:pointer}
-.btn-login:hover{background:#1976D2}
-.site-search{display:flex;align-items:center;gap:6px;border:1px solid #BDBDBD;border-radius:var(--radius-sm);padding:0 8px;height:36px;width:220px}
-.site-search input{border:none;outline:none;font-family:var(--font-body);font-size:13px;flex:1;background:transparent}
-.site-search svg{width:16px;height:16px;color:var(--text-tertiary);cursor:pointer;flex-shrink:0}
-.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
-.hamburger svg{width:24px;height:24px;color:var(--text-primary)}
-/* NAV BAR */
-.header-nav{display:flex;align-items:center;height:44px;padding:0 48px;background:var(--nav-blue)}
-.header-nav .nav{display:flex;align-items:center;gap:0}
-.header-nav .nav-item{font-family:var(--font-heading);font-size:13px;font-weight:600;color:#fff;cursor:pointer;padding:0 20px;height:44px;display:flex;align-items:center;text-transform:uppercase;letter-spacing:.3px}
-.header-nav .nav-item:hover{background:rgba(255,255,255,.15)}
-.header-nav .nav-item.has-sub::after{content:'▾';margin-left:6px;font-size:9px;color:rgba(255,255,255,.7)}
-.nav-home{padding:0 18px !important}
-.nav-home svg{width:18px;height:18px;stroke:#fff;fill:none}
-/* === SEARCH SECTION === */
-.search-section{background:var(--bg-search);padding:24px 48px}
-.search-title{font-family:var(--font-heading);font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:16px}
-.search-tabs{display:flex;gap:0;border-bottom:2px solid var(--nav-blue);margin-bottom:16px}
-.search-tab{font-family:var(--font-heading);font-size:14px;font-weight:500;color:var(--text-secondary);padding:10px 20px;cursor:pointer;position:relative}
-.search-tab.active{font-weight:700;color:var(--nav-blue);border-bottom:3px solid var(--nav-blue);margin-bottom:-2px}
-.search-tab.ai{color:var(--accent-red);font-weight:500}
-.search-form-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.search-form-row .label{font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--text-primary);white-space:nowrap}
-.search-form-row .info-icon{width:16px;height:16px;color:var(--text-tertiary);flex-shrink:0;cursor:help}
-.search-form-row input{flex:1;height:40px;border:1px solid #BDBDBD;border-radius:var(--radius-sm);padding:0 12px;font-family:var(--font-body);font-size:14px;outline:none}
-.search-form-row input:focus{border-color:var(--nav-blue)}
-.search-btn-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.btn-search{font-family:var(--font-heading);font-size:14px;font-weight:600;color:#fff;background:var(--accent-green);border:none;border-radius:var(--radius-sm);padding:0 24px;height:38px;cursor:pointer}
-.btn-search:hover{background:#388E3C}
-.btn-advanced{font-family:var(--font-body);font-size:13px;color:var(--text-secondary);background:#fff;border:1px solid #BDBDBD;border-radius:var(--radius-sm);padding:0 16px;height:38px;cursor:pointer;display:flex;align-items:center;gap:6px}
-.btn-advanced svg{width:14px;height:14px}
-.search-helper{font-size:12px;color:var(--text-tertiary)}
-/* === STICKY SEARCH === */
-.sticky-search{position:fixed;top:-64px;left:0;right:0;height:56px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;align-items:center;gap:16px;padding:0 48px;z-index:999;transition:top .3s}
-.sticky-search.visible{top:0}
-.sticky-logo{font-family:var(--font-heading);font-size:16px;font-weight:700;color:var(--nav-blue)}
-.sticky-logo .org{color:var(--accent-amber)}
-.sticky-bar{flex:1;display:flex;align-items:center;gap:8px;background:var(--bg-search);border-radius:var(--radius-md);padding:0 8px 0 12px;height:40px}
-.sticky-bar input{flex:1;border:none;outline:none;font-family:var(--font-body);font-size:13px;background:transparent}
-.sticky-bar .btn-search{height:32px;font-size:12px;padding:0 16px;border-radius:var(--radius-sm)}
-/* === MAIN LAYOUT === */
-.main-wrap{display:flex;gap:32px;padding:32px 48px;max-width:100%}
-.main-content{flex:1;display:flex;flex-direction:column;gap:32px;min-width:0}
-.sidebar{width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:24px}
-/* === SECTION HEADERS === */
-.section-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:2px solid var(--nav-blue);margin-bottom:16px}
-.section-header h2{font-family:var(--font-body);font-size:18px;font-weight:600;color:var(--text-primary)}
-.section-header .view-more{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:500;color:var(--nav-blue)}
-.section-header .view-more svg{width:14px;height:14px}
-.section-header .view-more:hover{text-decoration:underline}
-/* === BUSINESS CARD === */
-.biz-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.biz-card:last-child{margin-bottom:0}
-.biz-card .biz-name{font-family:var(--font-heading);font-size:15px;font-weight:600;color:var(--nav-blue);text-transform:uppercase}
-.biz-card .biz-name a{color:var(--nav-blue)}
-.biz-card .biz-name a:hover{color:#1976D2}
-.biz-meta{display:flex;flex-direction:column;gap:4px}
-.meta-row{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--font-body);font-size:13px}
-.meta-row .label{color:var(--text-tertiary);font-weight:500;white-space:nowrap}
-.meta-row .value{color:var(--text-primary);font-weight:500}
-.meta-row .addr{color:var(--text-secondary);flex:1;min-width:0}
-.meta-row .date-label{color:var(--text-tertiary);white-space:nowrap}
-.meta-row .date-val{color:var(--text-secondary)}
-/* === PILL TABS === */
-.pill-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.pill-tab{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--nav-blue);background:var(--pill-inactive);border:none;border-radius:16px;padding:0 16px;height:32px;display:flex;align-items:center;cursor:pointer}
-.pill-tab.active{background:var(--pill-active);color:#fff;font-weight:600}
-/* === STATUS TAGS === */
-.status-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.status-tag{font-family:var(--font-body);font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--radius-sm)}
-.status-tag.amber{color:var(--tag-amber-text);background:var(--tag-amber-bg)}
-.status-tag.red{color:var(--tag-red-text);background:var(--tag-red-bg)}
-/* === ARTICLES GRID === */
-.articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.article-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:16px}
-.article-card .thumb{height:120px;background:var(--pill-inactive);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--nav-blue);font-size:13px}
-.article-card .a-title{font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.article-card .a-date{font-size:11px;color:var(--text-tertiary)}
-.article-card:hover .a-title{color:var(--nav-blue)}
-/* === SIDEBAR === */
-.ad-placeholder{height:250px;border:1px dashed var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:13px}
-.sidebar-block{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
-.sb-header{font-family:var(--font-body);font-size:15px;font-weight:700;color:var(--text-primary);padding:12px 16px;border-bottom:2px solid var(--nav-blue)}
-.province-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;padding:12px 16px}
-.province-grid a{font-size:13px;color:var(--nav-blue);padding:2px 0}
-.province-grid a:hover{text-decoration:underline}
-.province-more{display:block;padding:10px 16px;font-size:13px;font-weight:500;color:var(--nav-blue);border-top:1px solid var(--border)}
-.province-more:hover{background:var(--pill-inactive)}
-.sidebar-articles .sa-item{display:flex;flex-direction:column;gap:2px;padding:10px 16px;border-bottom:1px solid #F1F5F9}
-.sidebar-articles .sa-item:last-child{border-bottom:none}
-.sidebar-articles .sa-title{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text-primary);line-height:1.4}
-.sidebar-articles .sa-title:hover{color:var(--nav-blue)}
-.sidebar-articles .sa-date{font-size:11px;color:var(--text-tertiary)}
-/* === FOOTER === */
-.footer{background:#EEEEEE;padding:24px 48px}
-.footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-bottom:20px}
-.footer-col h4{font-family:var(--font-heading);font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:10px}
-.footer-col a{display:block;font-family:var(--font-heading);font-size:12px;color:var(--link-blue);padding:3px 0}
-.footer-col a:hover{text-decoration:underline}
-.footer-col .f-desc{font-family:var(--font-body);font-size:12px;color:var(--text-secondary);line-height:1.5}
-.footer-col .f-contact{font-family:var(--font-body);font-size:12px;color:var(--text-secondary);padding:3px 0}
-.footer-divider{border:none;border-top:1px solid #BDBDBD;margin-bottom:16px}
-.footer-bottom{text-align:center}
-.footer-bottom p{font-size:11px;color:var(--text-tertiary)}
-/* === RESPONSIVE === */
-/* MOBILE MENU */
-.mobile-menu{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-top:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,.1);z-index:200;max-height:0;overflow:hidden;transition:max-height .3s ease}
-.mobile-menu.open{max-height:400px}
-.mobile-menu a{display:block;padding:14px 24px;font-family:var(--font-heading);font-size:14px;font-weight:500;color:var(--text-primary);border-bottom:1px solid #F1F5F9}
-.mobile-menu a:hover{background:var(--pill-inactive);color:var(--nav-blue)}
-.mobile-menu .mm-sub{padding-left:40px;font-size:13px;color:var(--text-secondary)}
-/* NAV DROPDOWNS */
-.nav-dropdown{display:none;position:absolute;top:44px;left:0;background:#fff;border:1px solid var(--border);border-radius:0 0 var(--radius-md) var(--radius-md);padding:8px 0;min-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.1);z-index:200}
-.header-nav .nav-item.has-sub{position:relative}
-.header-nav .nav-item.has-sub:hover .nav-dropdown{display:block}
-.nav-dropdown a{display:block;padding:10px 20px;font-size:13px;font-weight:500;color:var(--text-primary);text-transform:none;letter-spacing:0}
-.nav-dropdown a:hover{background:var(--pill-inactive);color:var(--nav-blue)}
-/* ADVANCED SEARCH */
-.advanced-search{max-height:0;overflow:hidden;transition:max-height .3s ease;margin-bottom:0}
-.advanced-search.open{max-height:300px;margin-bottom:12px}
-.advanced-search-inner{padding:16px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.adv-field label{display:block;font-family:var(--font-body);font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px}
-.adv-field select,.adv-field input{width:100%;height:36px;border:1px solid #BDBDBD;border-radius:var(--radius-sm);padding:0 10px;font-family:var(--font-body);font-size:13px;outline:none;background:#fff}
-.adv-field select:focus,.adv-field input:focus{border-color:var(--nav-blue)}
-.btn-advanced svg{transition:transform .3s ease}
-.btn-advanced.open svg{transform:rotate(180deg)}
-@media(max-width:1023px){
-  .header-top{padding:0 24px}
-  .header-nav{padding:0 24px}
-  .search-section{padding:24px}
-  .main-wrap{padding:24px;flex-direction:column}
-  .sidebar{width:100%}
-  .articles-grid{grid-template-columns:repeat(2,1fr)}
-  .footer{padding:24px}
-  .footer-cols{grid-template-columns:repeat(2,1fr)}
-  .sticky-search{padding:0 24px}
-  .header-right .header-contact{display:none}
-}
-@media(max-width:767px){
-  .header-top{padding:0 16px;height:56px}
-  .header-nav{display:none}
-  .hamburger{display:block}
-  .header-right .btn-login,.header-right .site-search{display:none}
-  .search-section{padding:16px}
-  .search-title{font-size:18px}
-  .main-wrap{padding:16px;gap:24px}
-  .section-header h2{font-size:15px}
-  .biz-card{padding:12px}
-  .biz-card .biz-name{font-size:14px}
-  .meta-row{font-size:11px;gap:8px}
-  .articles-grid{grid-template-columns:1fr}
-  .pill-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
-  .footer-cols{grid-template-columns:1fr 1fr;gap:20px}
-  .sticky-search{padding:0 16px;gap:12px}
-  .sticky-logo{display:none}
-}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spec ADE — The Agent-Native IDE</title>
+<link rel="icon" type="image/png" href="assets/favicon-128x128.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<!-- Theme detection: blocking script to prevent flash (must be before CSS link) -->
+<script>
+(function(){
+  var t=localStorage.getItem('spec-ade-theme');
+  if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';}
+  if(t==='light')document.documentElement.setAttribute('data-theme','light');
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Mockup-only styles kept inline (not part of landing page theme) */
+.ade{--app-bg:#080808;--app-surface:#17191b;--app-raised:#313234;--app-border:#252729;--app-text:#E2E4E8;--app-text-2:#8A8D92;--app-accent:#6E6ADE;--app-accent-h:#7B78E5;--app-pos:#50977c;--app-neg:#C4707D;--app-info:#38BDF8;--app-warn:#F0B429;--git-mod:#5E9FEF;--git-add:#68B06E;--git-del:#8A8E96;--git-unt:#D98080}
+.ade{display:grid;grid-template-columns:280px 1fr;grid-template-rows:40px 1fr;gap:8px;padding:8px;width:100%;height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:12px;color:var(--app-text);background:var(--app-bg);user-select:none}
+.ade *{box-sizing:border-box}
+.ade-sidebar-card{grid-row:1/3;border-radius:12px;border:1px solid var(--app-border);background:var(--app-surface);display:flex;flex-direction:column;overflow:hidden}
+.ade-topbar{border-radius:12px;border:1px solid var(--app-border);background:var(--app-surface);display:flex;align-items:center;gap:8px;padding:0 10px;height:40px;flex-shrink:0}
+.ade-topbar-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--app-text-2);cursor:pointer;font-size:14px}
+.ade-topbar-btn:hover{background:rgba(255,255,255,0.05)}
+.ade-project-name{font-weight:600;font-size:13px;color:var(--app-text);margin-left:2px}
+.ade-branch-btn{display:flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;border:1px solid var(--app-border);background:transparent;color:var(--app-text);font-size:12px;cursor:pointer}
+.ade-branch-btn svg{width:12px;height:12px;opacity:.6}
+.ade-sync-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;border-radius:6px;border:1px solid var(--app-border);background:transparent;color:var(--app-text-2);font-size:12px;cursor:pointer}
+.ade-topbar-spacer{flex:1}
+.ade-sidebar-tabs{display:flex;padding:8px 8px 6px;flex-shrink:0}
+.ade-sidebar-tabs-inner{display:flex;flex:1;background:var(--app-bg);border-radius:8px;padding:3px;gap:2px}
+.ade-sidebar-tab{flex:1;padding:5px 0;text-align:center;font-size:12.5px;font-weight:500;border-radius:6px;border:none;background:transparent;color:var(--app-text-2);cursor:pointer;transition:all .15s;font-family:inherit}
+.ade-sidebar-tab:hover{color:var(--app-text)}
+.ade-sidebar-tab.active{background:var(--app-surface);border:1px solid var(--app-border);color:var(--app-text)}
+.ade-sidebar-content{flex:1;overflow-y:auto;padding:0}
+.ade-section-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 6px;font-size:11px;font-weight:500;color:var(--app-text-2)}
+.ade-section-actions{display:flex;gap:2px}
+.ade-section-btn{display:flex;align-items:center;gap:3px;padding:3px 8px;border-radius:4px;border:none;background:rgba(255,255,255,0.04);color:var(--app-text-2);font-size:10px;cursor:pointer;font-family:inherit}
+.ade-section-btn:hover{background:rgba(255,255,255,0.08)}
+.ade-search{margin:0 8px 6px;padding:5px 8px;border-radius:6px;border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text);font-size:12px;font-family:inherit;outline:none;height:28px}
+.ade-project-item{display:flex;align-items:center;gap:8px;padding:0 12px;height:36px;cursor:pointer;transition:background .1s;border-left:2px solid transparent}
+.ade-project-item:hover{background:rgba(255,255,255,0.03)}
+.ade-project-item.selected{background:rgba(110,106,222,0.08);border-left-color:var(--app-accent)}
+.ade-project-icon{width:20px;height:20px;border-radius:4px;background:linear-gradient(135deg,var(--app-accent),#5530b8);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700;flex-shrink:0}
+.ade-project-info{flex:1;min-width:0}
+.ade-project-title{font-size:13px;font-weight:500;color:var(--app-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ade-project-path{font-size:11px;color:var(--app-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Geist Mono',ui-monospace,monospace}
+.ade-worktree-btn{display:flex;align-items:center;gap:4px;padding:4px 12px 4px 28px;font-size:11px;color:var(--app-text-2);cursor:pointer;border:1px dashed transparent;border-radius:4px;margin:1px 8px}
+.ade-worktree-btn:hover{color:var(--app-text);border-color:var(--app-border)}
+.ade-file-item{display:flex;align-items:center;gap:6px;padding:4px 12px 4px 16px;font-size:11px;color:var(--app-text);cursor:pointer}
+.ade-file-item:hover{background:rgba(255,255,255,0.03)}
+.ade-file-item .arrow{color:var(--app-text-2);font-size:8px;width:12px;text-align:center}
+.ade-file-item .icon{font-size:12px;opacity:.7}
+.ade-file-item .name{flex:1}
+.ade-file-item.folder .name{color:var(--app-text)}
+.ade-git-header{padding:10px 12px;display:flex;align-items:center;gap:8px}
+.ade-git-branch{font-size:12px;color:var(--app-text);font-family:'Geist Mono',ui-monospace,monospace;display:flex;align-items:center;gap:4px}
+.ade-git-change{display:flex;align-items:center;gap:6px;padding:4px 12px;font-size:11px;cursor:pointer}
+.ade-git-change:hover{background:rgba(255,255,255,0.03)}
+.ade-git-change .status{font-size:10px;font-weight:600;width:14px;text-align:center;font-family:'Geist Mono',ui-monospace,monospace}
+.ade-git-change .status.m{color:var(--git-mod)}.ade-git-change .status.a{color:var(--git-add)}.ade-git-change .status.d{color:var(--git-del)}.ade-git-change .status.u{color:var(--git-unt)}
+.ade-git-change .file{color:var(--app-text);font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px}
+.ade-git-actions{display:flex;gap:4px;padding:8px 12px}
+.ade-git-btn{padding:5px 12px;border-radius:5px;border:none;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.ade-git-btn.primary{background:var(--app-accent);color:#fff}
+.ade-git-btn.secondary{background:transparent;color:var(--app-text);border:1px solid var(--app-border)}
+.ade-main{border-radius:12px;border:1px solid var(--app-border);background:var(--app-surface);display:flex;flex-direction:column;overflow:hidden}
+.ade-main-tabs{display:flex;align-items:center;gap:0;padding:0 8px;height:34px;border-bottom:1px solid var(--app-border);flex-shrink:0}
+.ade-main-tab-btn{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:5px;border:none;background:transparent;color:var(--app-text-2);cursor:pointer;font-size:13px}
+.ade-main-tab-btn:hover{background:rgba(255,255,255,0.05)}
+.ade-main-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.ade-start-label{font-size:13px;color:var(--app-text-2);font-weight:500}
+.ade-start-options{display:flex;gap:10px}
+.ade-start-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;border:1px solid var(--app-border);background:transparent;color:var(--app-text);cursor:pointer;transition:all .15s;font-size:12px;font-weight:500;font-family:inherit}
+.ade-start-btn:hover{background:rgba(110,106,222,0.1);border-color:rgba(110,106,222,0.3)}
+.ade-start-btn .btn-icon{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.ade-start-btn .btn-icon.claude{background:linear-gradient(135deg,#d4a574,#c4956a)}
+.ade-start-btn .btn-icon.auggie{background:linear-gradient(135deg,var(--app-info),#22d3ee)}
+.ade-start-btn .btn-icon.terminal{background:rgba(255,255,255,0.1)}
+.ade-start-hint{font-size:11px;color:var(--app-text-2);opacity:.6}
+.ade-chat{flex:1;display:flex;flex-direction:column;padding:12px 16px;overflow-y:auto;gap:10px}
+.ade-chat-msg{max-width:100%}.ade-chat-msg.user{align-self:flex-end}.ade-chat-msg.agent{align-self:flex-start;width:100%}
+.ade-chat-sender{font-size:10px;color:var(--app-text-2);margin-bottom:3px;font-weight:600}
+.ade-chat-bubble{font-size:13px;line-height:1.5}
+.ade-chat-msg.user .ade-chat-bubble{background:var(--app-raised);border:1px solid var(--app-border);border-radius:8px;padding:8px 12px;margin-left:32px;color:var(--app-text)}
+.ade-chat-msg.agent .ade-chat-bubble{background:transparent;border:none;padding:0;color:var(--app-text)}
+.ade-chat-tools-group{margin-top:6px;border:1px solid var(--app-border);border-radius:6px;overflow:hidden}
+.ade-chat-tools-summary{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:11px;color:var(--app-text-2);cursor:pointer;background:var(--app-surface)}
+.ade-chat-tool-row{display:flex;align-items:center;gap:6px;padding:4px 10px;border-top:1px solid var(--app-border);font-size:11px;font-family:'Geist Mono',ui-monospace,monospace;color:var(--app-text-2)}
+.ade-chat-tool-row .tool-status-ok{color:var(--app-pos)}
+.ade-thought-block{font-size:12px;color:var(--app-text-2);font-style:italic;padding:4px 0 6px;display:flex;align-items:center;gap:6px}
+.ade-thought-block.active{animation:thought-pulse 1.5s ease-in-out infinite}
+@keyframes thought-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+.ade-chat-input{padding:8px 16px 12px;border-top:1px solid var(--app-border);display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.ade-chat-input-toolbar{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--app-text-2)}
+.ade-chat-input-row{display:flex;align-items:flex-end;gap:8px}
+.ade-chat-input-field{flex:1;min-height:32px;padding:6px 10px;border:1px solid var(--app-border);border-radius:6px;background:var(--app-bg);color:var(--app-text);font-size:13px;font-family:inherit;resize:none;outline:none}
+.ade-chat-send{width:36px;height:36px;border-radius:6px;border:1px solid var(--app-border);background:var(--app-surface);color:var(--app-text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ade-chat-status{display:flex;align-items:center;gap:8px;padding:4px 16px;border-top:1px solid var(--app-border);font-size:10px;color:var(--app-text-2);flex-shrink:0}
+.ade-ctx-bar{flex:1;height:3px;border-radius:2px;background:var(--app-raised);overflow:hidden}
+.ade-ctx-bar-fill{height:100%;border-radius:2px;background:var(--app-accent);width:18%}
+.ade-bottombar{display:flex;align-items:center;gap:6px;padding:0 8px;height:30px;border-top:1px solid var(--app-border);flex-shrink:0;font-size:10.5px;color:var(--app-text-2)}
+.ade-bottom-btn{display:flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;border:none;background:transparent;color:var(--app-text-2);cursor:pointer;font-size:10.5px;font-family:inherit}
+.ade-bottom-btn:hover{background:rgba(255,255,255,0.04);color:var(--app-text)}
+.ade-bottom-badge{display:inline-flex;align-items:center;justify-content:center;min-width:14px;height:14px;border-radius:7px;background:var(--app-accent);color:#fff;font-size:8px;font-weight:700;padding:0 3px}
+.ade-bottom-spacer{flex:1}
+.ade-bottom-meter{display:flex;align-items:center;gap:3px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px}
+.ade-bottom-meter .bar{width:32px;height:4px;border-radius:2px;background:var(--app-raised);overflow:hidden}
+.ade-bottom-meter .bar-fill{height:100%;border-radius:2px}
+.ade-newclaw{padding:16px 20px;display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto}
+.ade-newclaw-title{font-size:14px;font-weight:600;color:var(--app-text);margin-bottom:2px}
+.ade-newclaw-field{display:flex;flex-direction:column;gap:4px}
+.ade-newclaw-label{font-size:12px;color:var(--app-text-2);font-weight:500}
+.ade-newclaw-input,.ade-newclaw-select{padding:6px 10px;border-radius:6px;border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text);font-size:13px;font-family:inherit;outline:none}
+.ade-newclaw-textarea{padding:6px 10px;border-radius:6px;border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text);font-size:13px;font-family:inherit;outline:none;min-height:64px;resize:none}
+.ade-newclaw-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:4px;margin-top:auto}
+.ade-newclaw-cancel{padding:6px 14px;border-radius:6px;border:1px solid var(--app-border);background:transparent;color:var(--app-text-2);font-size:13px;cursor:pointer;font-family:inherit}
+.ade-newclaw-create{padding:6px 14px;border-radius:6px;border:none;background:var(--app-accent);color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.ade-typing-dots{display:flex;align-items:center;gap:4px;padding:4px 0}
+.ade-typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--app-text-2);animation:dot-bounce .9s ease-in-out infinite;display:inline-block}
+.ade-typing-dots span:nth-child(2){animation-delay:.16s}
+.ade-typing-dots span:nth-child(3){animation-delay:.32s}
+@keyframes dot-bounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
+.ade-chat-bubble .streaming-cursor{display:inline-block;width:5px;height:12px;background:var(--app-accent);margin-left:2px;vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.ade-chat-tool-row.streaming-in{animation:tool-fade-in .3s ease-out forwards}
+@keyframes tool-fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.ade-chat-msg.streaming-msg{animation:msg-slide-in .25s ease-out forwards}
+@keyframes msg-slide-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
-<!-- STICKY SEARCH -->
-<div class="sticky-search" id="stickySearch">
-  <div class="sticky-logo">MaSoThueVN<span class="org">.Org</span></div>
-  <div class="sticky-bar">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input type="text" placeholder="Nhập MST / Tên DN / Người đại diện…">
-    <button class="btn-search">Tìm kiếm</button>
-  </div>
-</div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel">
+const{useEffect,useState,useRef,useContext,createContext,useCallback}=React;
 
-<!-- HEADER -->
-<div class="header-wrap">
-  <div class="header-top">
-    <a href="/" class="header-left">
-      <div>
-        <div class="logo-text">MaSoThueVN<span class="org">.Org</span></div>
-        <div class="logo-tagline">Danh bạ Doanh nghiệp Việt Nam</div>
-      </div>
-    </a>
-    <div class="header-right">
-      <div class="header-contact">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        1900-xxxx
-      </div>
-      <div class="header-contact">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        info@masothuevn.org
-      </div>
-      <button class="btn-login">Đăng nhập</button>
-      <div class="site-search">
-        <input type="text" placeholder="Tìm kiếm...">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      </div>
-      <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="header-nav">
-    <nav class="nav">
-      <a class="nav-item nav-home" href="/">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </a>
-      <div class="nav-item has-sub">TRA CỨU MST
-        <div class="nav-dropdown">
-          <a href="/tra-cuu/doanh-nghiep">Tra cứu MST doanh nghiệp</a>
-          <a href="/tra-cuu/ca-nhan">Tra cứu MST cá nhân</a>
-        </div>
-      </div>
-      <div class="nav-item has-sub">DANH MỤC
-        <div class="nav-dropdown">
-          <a href="/tinh-thanh">Tỉnh/Thành phố</a>
-          <a href="/nganh-nghe">Ngành nghề</a>
-          <a href="/loai-hinh">Loại hình DN</a>
-          <a href="/tinh-trang">Tình trạng hoạt động</a>
-          <a href="/moi-thanh-lap">DN mới thành lập</a>
-        </div>
-      </div>
-      <a class="nav-item" href="/huong-dan">HƯỚNG DẪN</a>
-      <a class="nav-item" href="/blog">BLOG</a>
-    </nav>
-  </div>
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Trang chủ</a>
-    <a href="/tra-cuu/doanh-nghiep">Tra cứu MST doanh nghiệp</a>
-    <a href="/tra-cuu/ca-nhan" class="mm-sub">Tra cứu MST cá nhân</a>
-    <a href="/tinh-thanh">Tỉnh/Thành phố</a>
-    <a href="/nganh-nghe" class="mm-sub">Ngành nghề</a>
-    <a href="/loai-hinh" class="mm-sub">Loại hình DN</a>
-    <a href="/huong-dan">Hướng dẫn</a>
-    <a href="/blog">Blog</a>
-  </div>
-</div>
-<section class="search-section" id="searchSection">
-  <div class="search-title">Tìm kiếm thông tin doanh nghiệp</div>
-  <div class="search-tabs">
-    <div class="search-tab active">TRA CỨU MÃ SỐ THUẾ</div>
-    <div class="search-tab ai">TÌM KIẾM BẰNG AI</div>
-  </div>
-  <div class="search-form-row">
-    <span class="label">Từ khóa</span>
-    <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-    <input type="text" placeholder="Nhập MST / Tên DN / Người đại diện…">
-  </div>
-  <div class="search-btn-row">
-    <button class="btn-search">Tìm kiếm</button>
-    <button class="btn-advanced" id="btnAdvanced">Click để tìm kiếm nâng cao
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+/* === TELEGRAM URL === */
+const TELEGRAM_URL='https://t.me/nullmastermind';
+
+/* === LOCALE SYSTEM === */
+const VI_STRINGS={"nav.features":"Tính năng","nav.roadmap":"Lộ trình","nav.docs":"Tài liệu","nav.cta":"Liên hệ Telegram","hero.eyebrow":"AI-POWERED DEVELOPMENT ENVIRONMENT","hero.title1":"Agent-Native IDE.","hero.title2":"Không ma sát.","hero.sub":"Một workspace thống nhất nơi nhiều AI agent hoạt động song song — mỗi agent có terminal, worktree và quyền riêng — trong khi bạn vẫn kiểm soát.","hero.stat1":"50ms phản hồi agent","hero.stat2":"12× claw song song","hero.stat3":"∞ worktrees","hero.cta_primary":"Liên hệ Telegram","hero.cta_secondary":"Đọc tài liệu","hero.platform":"Hỗ trợ","hero.screenshot_hint":"Nhấn để xem demo tương tác","compare.tag":"Tại sao Spec ADE","compare.title":"Xây dựng cho","compare.title_em":"Agent.","compare.sub":"Ngừng chắp vá terminal, editor và script. Một workspace cho mọi thứ agent cần.","compare.bad_label":"✗ Cách truyền thống","compare.good_label":"✓ Spec ADE","compare.stat1_label":"Chuyển đổi ngữ cảnh","compare.stat1_bad":"5+ công cụ mở","compare.stat1_good":"1 cửa sổ","compare.stat2_label":"Kết nối agent","compare.stat2_bad":"Script thủ công","compare.stat2_good":"Không cần cấu hình","compare.stat3_label":"Agent song song","compare.stat3_bad":"Không hỗ trợ","compare.stat3_good":"12× claws","compare.stat4_label":"Cô lập Git","compare.stat4_bad":"Xung đột branch","compare.stat4_good":"Tự động worktrees","compare.bad_note":"Chi phí lớn, code kết nối dễ hỏng...","compare.good_note":"✓ Agent-native, sẵn sàng ngay","deep.tag1":"Multi-Agent","deep.title1":"Nhiều agent. Một workspace.","deep.desc1":"Chạy đội ngũ AI agent trên một project — bot review, viết doc, tạo test — mỗi agent cô lập, tất cả dưới một mái nhà. Claude Code, Auggie, hoặc bất kỳ agent tương thích ACP.","deep.stat1_lbl":"Độ trễ agent","deep.stat2_lbl":"Claw song song","deep.tag2":"Tự động","deep.title2":"Claw tự vận hành.","deep.desc2":"Tạo các agent tự động với quyền, lịch trình và quản lý vòng đời có thể cấu hình. Chúng làm việc khi bạn ngủ.","deep.feat1":"Chế độ tự duyệt — agent chạy không gián đoạn","deep.feat2":"Keep-alive — tự khởi động lại khi crash, tối đa 3 lần","deep.feat3":"Hệ thống Skill — gói prompt + công cụ tái sử dụng","deep.feat4":"Rào chắn quyền — mức tin cậy cho mỗi claw","feat.tag":"Bộ công cụ","feat.title":"Xây dựng cho","feat.title_em":"Hiệu quả.","feat.sub":"Mọi thứ agent cần. Không gì thừa.","feat.terminal":"Terminal","feat.terminal_desc":"Terminal PTY đầy đủ với xterm.js. Màu sắc, di chuyển con trỏ, chương trình tương tác — terminal thật, không phải console.","feat.chat":"Chat","feat.chat_desc":"Chat qua WebSocket với streaming thời gian thực, hiển thị tool call, và lịch sử tin nhắn qua các phiên.","feat.git":"Git","feat.git_desc":"Staging, commit, branch, merge editor, và diff viewer. Dùng git2 cho tốc độ, git CLI cho mutations.","feat.worktrees":"Worktrees","feat.worktrees_desc":"Mỗi agent có worktree riêng. Refactor song song không xung đột branch — diff, review, merge từ sidebar.","feat.skills":"Skills","feat.skills_desc":"Đóng gói prompt + công cụ thành Skill tái sử dụng. Gắn vào bất kỳ claw nào. Có phiên bản, chia sẻ được.","feat.permissions":"Quyền","feat.permissions_desc":"Tự duyệt, bỏ qua, hoặc review từng bước. Chế độ quyền cho mỗi claw — mặc định hợp lý, kiểm soát hoàn toàn.","usecase.tag":"Dành cho","usecase.title":"Ai ship","usecase.title_em":"nhiều nhất.","usecase.solo":"Solo Founder","usecase.solo_desc":"Đội ngũ agent phía sau bạn. Ship như startup 10 người.","usecase.enterprise":"Doanh nghiệp","usecase.enterprise_desc":"Điều phối agent quy mô team với quản lý tập trung, quyền và audit trail.","usecase.platform":"Platform Team","usecase.platform_desc":"Ship migration qua các service song song. Một spec, nhiều worktrees.","usecase.agency":"Agency","usecase.agency_desc":"Chạy claw farm cho mỗi client. Billing riêng, skill riêng, một cockpit.","roadmap.tag":"Lộ trình","roadmap.title":"Xây dựng","roadmap.title_em":"Tương lai.","roadmap.sub":"Phát triển nhanh chóng. Đây là những gì đang ship, đang trong lab, và phía trước.","roadmap.live":"Hoạt động","roadmap.wip":"◐ Đang phát triển","roadmap.future":"○ Tương lai","roadmap.terminal":"Terminal & PTY","roadmap.terminal_desc":"Trình giả lập terminal đầy đủ với xterm.js, slash commands, hỗ trợ shell đa nền tảng.","roadmap.git":"Tích hợp Git","roadmap.git_desc":"Staging, commit, branch, merge editor, diff viewer. Kết hợp git2 + git CLI.","roadmap.chat":"Chat & Streaming","roadmap.chat_desc":"Chat WebSocket với streaming thời gian thực, hiển thị tool call, lịch sử tin nhắn.","roadmap.acp":"ACP Agents","roadmap.acp_desc":"Hỗ trợ Agent Client Protocol để kết nối bất kỳ AI agent tương thích.","roadmap.desktop":"Ứng dụng Desktop","roadmap.desktop_desc":"Ứng dụng desktop Tauri v2 với sidecar binary và tích hợp system tray.","roadmap.marketplace":"Plugin Marketplace","roadmap.marketplace_desc":"Khám phá và cài đặt skill, theme, và cấu hình agent từ cộng đồng.","cta.title1":"Ngừng kết nối agent thủ công.","cta.title2":"Bắt đầu chạy chúng.","cta.sub":"Miễn phí trong giai đoạn beta. macOS trước, Linux tiếp theo.","cta.primary":"Liên hệ Telegram","footer.copyright":"© 2026 spec-ade","footer.download":"Download","footer.docs":"Tài liệu","footer.discord":"Discord"};
+const LocaleContext=createContext({locale:'vi',t:k=>k,setLocale:()=>{}});
+
+function LocaleProvider({children}){
+  const[locale,setLocaleState]=useState(()=>{
+    const saved=localStorage.getItem('spec-ade-locale');
+    if(saved)return saved;
+    const lang=navigator.language||'';
+    return lang.startsWith('en')?'en':'vi';
+  });
+  const[strings,setStrings]=useState(VI_STRINGS||{});
+  const setLocale=useCallback((l)=>{
+    setLocaleState(l);
+    localStorage.setItem('spec-ade-locale',l);
+    document.documentElement.lang=l;
+  },[]);
+  useEffect(()=>{
+    document.documentElement.lang=locale;
+    if(!localStorage.getItem('spec-ade-locale'))localStorage.setItem('spec-ade-locale',locale);
+    if(locale==='vi'&&strings===VI_STRINGS)return;
+    fetch(`locales/${locale}.json`).then(r=>r.json()).then(setStrings).catch(()=>{
+      if(locale==='vi'&&VI_STRINGS)setStrings(VI_STRINGS);
+    });
+  },[locale]);
+  const t=useCallback((key)=>strings[key]||key,[strings]);
+  return <LocaleContext.Provider value={{locale,t,setLocale}}>{children}</LocaleContext.Provider>;
+}
+function useLocale(){return useContext(LocaleContext);}
+
+/* === THEME TOGGLE === */
+function ThemeToggle(){
+  const[theme,setTheme]=useState(()=>document.documentElement.getAttribute('data-theme')==='light'?'light':'dark');
+  const toggle=()=>{
+    const next=theme==='dark'?'light':'dark';
+    setTheme(next);
+    localStorage.setItem('spec-ade-theme',next);
+    if(next==='light')document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+  };
+  return(
+    <button className="theme-toggle" onClick={toggle} aria-label={theme==='dark'?'Switch to light mode':'Switch to dark mode'}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{transform:theme==='dark'?'rotate(0deg)':'rotate(180deg)'}}>
+        {theme==='dark'
+          ?<><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></>
+          :<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>}
+      </svg>
     </button>
-  </div>
-  <div class="advanced-search" id="advancedSearch">
-    <div class="advanced-search-inner">
-      <div class="adv-field">
-        <label>Tỉnh/Thành phố</label>
-        <select><option value="">Tất cả</option><option>Hà Nội</option><option>TP. Hồ Chí Minh</option><option>Đà Nẵng</option><option>Hải Phòng</option></select>
+  );
+}
+
+/* === LANG TOGGLE === */
+function LangToggle(){
+  const{locale,setLocale}=useLocale();
+  return(
+    <div className="lang-toggle">
+      <button className={locale==='vi'?'active':''} aria-pressed={locale==='vi'} onClick={()=>setLocale('vi')}>VI</button>
+      <button className={locale==='en'?'active':''} aria-pressed={locale==='en'} onClick={()=>setLocale('en')}>EN</button>
+    </div>
+  );
+}
+
+/* === CURSOR GLOW === */
+function CursorGlow(){
+  const ref=useRef(null);
+  useEffect(()=>{
+    const h=e=>{if(ref.current){ref.current.style.left=e.clientX+'px';ref.current.style.top=e.clientY+'px';ref.current.style.opacity='1';}};
+    window.addEventListener('mousemove',h);
+    return()=>window.removeEventListener('mousemove',h);
+  },[]);
+  return <div ref={ref} className="cursor-glow" style={{opacity:0}}/>;
+}
+
+/* === REVEAL HOOK === */
+function useReveal(){
+  useEffect(()=>{
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    return()=>obs.disconnect();
+  },[]);
+}
+
+/* === COUNTER === */
+function Counter({to,suffix='',duration=1600}){
+  const[val,setVal]=useState(0);const ref=useRef(null);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(entries=>{
+      if(entries[0].isIntersecting){const start=performance.now();const tick=now=>{const t=Math.min((now-start)/duration,1);setVal(Math.round((1-Math.pow(1-t,3))*to));if(t<1)requestAnimationFrame(tick);};requestAnimationFrame(tick);obs.disconnect();}
+    });if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
+  },[to,duration]);
+  return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
+}
+
+/* === SCROLL PROGRESS === */
+function ScrollProgress(){
+  useEffect(()=>{
+    const update=()=>{const max=document.documentElement.scrollHeight-window.innerHeight;const p=max>0?window.scrollY/max:0;document.documentElement.style.setProperty('--p',p);};
+    update();window.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);
+    return()=>{window.removeEventListener('scroll',update);window.removeEventListener('resize',update);};
+  },[]);
+  return <div className="scroll-progress"/>;
+}
+
+/* === MOCKUP DATA (preserved) === */
+const PROJECTS=[
+  {name:'spec_ade_html',path:'/Users/huy/Dev/www/spec_ade_html',selected:true},
+  {name:'sendmail-aws',path:'/Users/huy/Dev/www/dauthau/sendmail-aws'},
+  {name:'api2cursor',path:'/Users/huy/Dev/www/api2cursor'},
+  {name:'cursor-agent-api-proxy',path:'/Users/huy/Dev/www/cursor-agent-api-proxy'},
+  {name:'crmprivate.dauthau.net',path:'/Users/huy/Dev/www/dauthau/crmprivate.dauthau.net'},
+  {name:'spec-ade',path:'/Users/huy/Dev/www/spec-ade'},
+  {name:'dauthau.info',path:'/Users/huy/Dev/www/dauthau/dauthau.info'},
+];
+const FILES=[
+  {name:'.claude',type:'folder'},{name:'assets',type:'folder'},{name:'openspec',type:'folder'},
+  {name:'.DS_Store',type:'file'},{name:'.gitignore',type:'file'},{name:'Dockerfile',type:'file'},
+  {name:'docker-compose.yml',type:'file'},{name:'index.html',type:'file'},{name:'nginx.conf',type:'file'},{name:'package.json',type:'file'},
+];
+const GIT_CHANGES=[
+  {status:'M',file:'.DS_Store'},{status:'M',file:'index.html'},
+  {status:'A',file:'assets/screens/files-chat.png'},{status:'A',file:'assets/screens/git.png'},
+  {status:'A',file:'assets/screens/projects.png'},{status:'A',file:'assets/screens/new-claw.png'},
+  {status:'U',file:'docker-compose.yml'},
+];
+const CHAT_MESSAGES=[
+  {role:'user',text:'Analyze project structure and suggest improvements'},
+  {role:'agent',text:'I\'ll scan the codebase to understand the architecture.',tools:['Read index.html','Glob **/*.ts']},
+  {role:'agent',text:'This is a single-page React app using Babel standalone. The HTML file contains all styles and components inline. Suggestions:\n\n1. Extract CSS to separate file\n2. Use build tool (Vite) for JSX\n3. Split components into modules'},
+  {role:'user',text:'Do it, refactor with Vite + React'},
+  {role:'agent',text:'Setting up the new project structure. I\'ll create Vite config, extract components, and migrate styles.',tools:['Write vite.config.ts','Write src/App.tsx','Write src/styles/tokens.css']},
+  {role:'agent',text:'Done! The project is now using Vite with HMR. Run `npm run dev` to start.\n\n✓ 3 components extracted\n✓ CSS tokens separated\n✓ Build time: 0.4s'},
+];
+
+/* === MOCKUP COMPONENTS (preserved) === */
+function SidebarProjects(){return(<div><div className="ade-section-header"><span>Projects</span><div className="ade-section-actions"><span className="ade-section-btn">⊕ Open</span><span className="ade-section-btn">+ New</span></div></div><div style={{padding:'0 8px 6px'}}><input className="ade-search" placeholder="Search projects..." readOnly style={{width:'100%',display:'block'}}/></div>{PROJECTS.map((p,i)=>(<React.Fragment key={i}><div className={`ade-project-item${p.selected?' selected':''}`}><div className="ade-project-icon">{p.name[0].toUpperCase()}</div><div className="ade-project-info"><div className="ade-project-title">{p.name}</div><div className="ade-project-path">{p.path}</div></div></div><div className="ade-worktree-btn">+ Add Worktree</div></React.Fragment>))}<div className="ade-section-header" style={{marginTop:8}}><span>Claw Projects</span><div className="ade-section-actions"><span className="ade-section-btn">⊕ Open</span><span className="ade-section-btn">+ New</span></div></div><div className="ade-project-item"><div className="ade-project-icon" style={{background:'linear-gradient(135deg,#67e8f9,#22d3ee)'}}>C</div><div className="ade-project-info"><div className="ade-project-title">cowork_viber</div><div className="ade-project-path">/Users/huy/Dev/www/cowork_viber</div></div></div></div>);}
+function SidebarFiles(){return(<div style={{padding:'6px 0'}}>{FILES.map((f,i)=>(<div key={i} className={`ade-file-item${f.type==='folder'?' folder':''}`}><span className="arrow">{f.type==='folder'?'▸':''}</span><span className="icon">{f.type==='folder'?'📁':'📄'}</span><span className="name">{f.name}</span></div>))}</div>);}
+function SidebarGit(){return(<div><div className="ade-git-header"><span className="ade-git-branch">⎇ main</span><span style={{fontSize:10,color:'#6e6884',marginLeft:'auto'}}>{GIT_CHANGES.length} changes</span></div><div className="ade-git-actions"><button className="ade-git-btn primary">Commit All</button><button className="ade-git-btn secondary">Stage All</button><button className="ade-git-btn secondary">Push</button></div><div style={{padding:'4px 0'}}>{GIT_CHANGES.map((c,i)=>(<div key={i} className="ade-git-change"><span className={`status ${c.status.toLowerCase()}`}>{c.status}</span><span className="file">{c.file}</span></div>))}</div></div>);}
+function MainStart(){return(<div className="ade-main-content"><div className="ade-start-label">Start a session</div><div className="ade-start-options"><div className="ade-start-btn"><span className="btn-icon claude">✦</span>Claude Code</div><div className="ade-start-btn"><span className="btn-icon auggie">A</span>Auggie</div><div className="ade-start-btn"><span className="btn-icon terminal">▸</span>Terminal & CLI</div></div><div className="ade-start-hint">or open a file from the sidebar</div></div>);}
+
+function MainChat(){
+  const[visibleMsgs,setVisibleMsgs]=useState([]);const[streamingText,setStreamingText]=useState('');const[streamingTools,setStreamingTools]=useState([]);const[isStreaming,setIsStreaming]=useState(false);const[showTypingDots,setShowTypingDots]=useState(false);const chatRef=useRef(null);const animRef=useRef(null);
+  useEffect(()=>{
+    let cancelled=false;
+    const runSequence=async()=>{while(!cancelled){setVisibleMsgs([]);setStreamingText('');setStreamingTools([]);setIsStreaming(false);setShowTypingDots(false);await delay(600);for(let mi=0;mi<CHAT_MESSAGES.length;mi++){if(cancelled)return;const msg=CHAT_MESSAGES[mi];if(msg.role==='user'){setVisibleMsgs(prev=>[...prev,msg]);scrollChat();await delay(800);}else{setShowTypingDots(true);scrollChat();await delay(700);setShowTypingDots(false);setIsStreaming(true);setStreamingText('');setStreamingTools([]);const chars=msg.text;for(let ci=0;ci<chars.length;ci++){if(cancelled)return;setStreamingText(chars.slice(0,ci+1));scrollChat();const ch=chars[ci];const spd=ch==='\n'?30:ch===' '?15:ci<3?40:18;await delay(spd);}if(msg.tools){for(let ti=0;ti<msg.tools.length;ti++){if(cancelled)return;await delay(250);setStreamingTools(prev=>[...prev,msg.tools[ti]]);scrollChat();}}await delay(300);setIsStreaming(false);setVisibleMsgs(prev=>[...prev,msg]);setStreamingText('');setStreamingTools([]);scrollChat();await delay(500);}}await delay(4000);}};
+    function delay(ms){return new Promise(r=>{animRef.current=setTimeout(r,ms);});}
+    function scrollChat(){requestAnimationFrame(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight;});}
+    runSequence();return()=>{cancelled=true;clearTimeout(animRef.current);};
+  },[]);
+  return(<React.Fragment><div className="ade-chat" ref={chatRef}>{visibleMsgs.map((m,i)=>(<div key={i} className={`ade-chat-msg ${m.role} streaming-msg`}>{m.role==='agent'&&<div className="ade-chat-sender">Claude Code</div>}<div className="ade-chat-bubble" style={{whiteSpace:'pre-wrap'}}>{m.text}</div>{m.tools&&(<div className="ade-chat-tools-group"><div className="ade-chat-tools-summary"><span style={{color:'var(--app-pos)'}}>✓</span> {m.tools.length} tool call</div>{m.tools.map((t,ti)=>(<div key={ti} className="ade-chat-tool-row"><span className="tool-status-ok">✓</span> {t}</div>))}</div>)}</div>))}{showTypingDots&&!isStreaming&&(<div className="ade-chat-msg agent"><div className="ade-chat-sender">Claude Code</div><div className="ade-thought-block active">💭 Thinking...</div><div className="ade-chat-bubble"><div className="ade-typing-dots"><span/><span/><span/></div></div></div>)}{isStreaming&&(<div className="ade-chat-msg agent streaming-msg"><div className="ade-chat-sender">Claude Code</div><div className="ade-chat-bubble" style={{whiteSpace:'pre-wrap'}}>{streamingText}<span className="streaming-cursor"></span></div>{streamingTools.length>0&&(<div className="ade-chat-tools-group"><div className="ade-chat-tools-summary"><span style={{color:'var(--app-pos)'}}>✓</span> {streamingTools.length} tool call</div>{streamingTools.map((t,ti)=>(<div key={ti} className="ade-chat-tool-row streaming-in"><span className="tool-status-ok">✓</span> {t}</div>))}</div>)}</div>)}</div><div className="ade-chat-status"><span>18k / 100k tokens</span><div className="ade-ctx-bar"><div className="ade-ctx-bar-fill"></div></div><span>18%</span></div><div className="ade-chat-input"><div className="ade-chat-input-toolbar"><span style={{padding:'2px 6px',border:'1px solid var(--app-border)',borderRadius:4}}>Normal</span><span style={{padding:'2px 6px',border:'1px solid var(--app-border)',borderRadius:4}}>claude-opus-4-6</span><span style={{marginLeft:'auto',padding:'2px 6px',border:'1px solid var(--app-border)',borderRadius:4}}>Auto ✓</span></div><div className="ade-chat-input-row"><textarea className="ade-chat-input-field" placeholder="Ask Claude Code..." readOnly rows={1}/><button className="ade-chat-send">↑</button></div></div></React.Fragment>);
+}
+
+function MainNewClaw(){return(<div className="ade-newclaw"><div className="ade-newclaw-title">New Claw</div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Name *</span><input className="ade-newclaw-input" placeholder="my-review-bot" readOnly/></div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Description</span><input className="ade-newclaw-input" placeholder="What does this claw do?" readOnly/></div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Agent</span><div className="ade-newclaw-select">Claude Code (Opus 4.6)</div></div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Skill</span><div className="ade-newclaw-select">review-pr</div></div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Schedule</span><input className="ade-newclaw-input" placeholder="0 9 * * 1-5 (cron)" readOnly/></div><div className="ade-newclaw-field"><span className="ade-newclaw-label">Prompt</span><textarea className="ade-newclaw-textarea" placeholder="Review all open PRs and leave comments..." readOnly/></div><div className="ade-newclaw-footer"><button className="ade-newclaw-cancel">Cancel</button><button className="ade-newclaw-create">Create</button></div></div>);}
+
+function AppMockup({scene}){
+  const sidebarTab=(scene==='projects'||scene==='claw')?'Projects':scene==='git'?'Git':'Files';const showChat=scene==='files';
+  return(<div className="ade"><div className="ade-sidebar-card"><div className="ade-sidebar-tabs"><div className="ade-sidebar-tabs-inner">{['Projects','Files','Git'].map(t=>(<div key={t} className={`ade-sidebar-tab${sidebarTab===t?' active':''}`}>{t}</div>))}</div></div><div className="ade-sidebar-content">{sidebarTab==='Projects'&&<SidebarProjects/>}{sidebarTab==='Files'&&<SidebarFiles/>}{sidebarTab==='Git'&&<SidebarGit/>}</div><div className="ade-bottombar"><span className="ade-bottom-btn">⚙</span><span className="ade-bottom-btn">🦀 Farm <span className="ade-bottom-badge">2</span></span><span className="ade-bottom-btn">Sessions <span className="ade-bottom-badge">3</span></span><span className="ade-bottom-spacer"></span><span className="ade-bottom-meter"><span style={{opacity:.6}}>CPU</span><span className="bar"><span className="bar-fill" style={{width:'46%',background:'var(--app-accent)'}}></span></span></span><span className="ade-bottom-meter" style={{marginLeft:4}}><span style={{opacity:.6}}>RAM</span><span className="bar"><span className="bar-fill" style={{width:'85%',background:'var(--app-info)'}}></span></span></span></div></div><div className="ade-topbar"><span className="ade-topbar-btn">☰</span><span className="ade-project-name">spec_ade_html</span><span className="ade-branch-btn"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 3.25a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.5 2.5 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25z"/></svg>main</span><span className="ade-sync-btn">↓0</span><span className="ade-sync-btn">↑2</span><span className="ade-topbar-spacer"></span><span className="ade-topbar-btn">☀</span></div><div className="ade-main"><div className="ade-main-tabs"><span className="ade-main-tab-btn">+</span><span className="ade-main-tab-btn">⊟</span></div>{showChat?<MainChat/>:scene==='claw'?<MainNewClaw/>:<MainStart/>}</div></div>);
+}
+
+/* === NAV === */
+function Nav(){
+  const{t}=useLocale();
+  return(
+    <nav className="nav">
+      <div className="nav-logo"><img src="assets/favicon-128x128.png" alt="Spec ADE" style={{width:22,height:22,borderRadius:6}}/><span>spec-ade</span></div>
+      <a className="nav-link" href="#features">{t('nav.features')}</a>
+      <a className="nav-link" href="#roadmap">{t('nav.roadmap')}</a>
+      <a className="nav-link" href="docs/">{t('nav.docs')}</a>
+      <div className="nav-controls">
+        <LangToggle/>
+        <ThemeToggle/>
       </div>
-      <div class="adv-field">
-        <label>Ngành nghề</label>
-        <select><option value="">Tất cả</option><option>Xây dựng</option><option>Bán lẻ</option><option>Vận tải</option><option>Công nghệ</option></select>
+      <a className="nav-cta" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">{t('nav.cta')}</a>
+    </nav>
+  );
+}
+
+/* === HERO (centered) === */
+function Hero({onOpenLightbox}){
+  const{t}=useLocale();
+  return(
+    <section className="hero"><div className="shell">
+      <div className="reveal">
+        <div className="eyebrow"><span className="dot"></span>{t('hero.eyebrow')}</div>
+        <h1>{t('hero.title1')}<br/><span className="accent">{t('hero.title2')}</span></h1>
+        <p className="hero-sub">{t('hero.sub')}</p>
+        <div className="hero-stats">
+          <span className="hero-stat">{t('hero.stat1')}</span>
+          <span className="hero-stat">{t('hero.stat2')}</span>
+          <span className="hero-stat">{t('hero.stat3')}</span>
+        </div>
+        <div className="hero-cta-row">
+          <a className="btn btn-primary" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">{t('hero.cta_primary')}<span className="btn-arrow">↗</span></a>
+          <a className="btn btn-ghost" href="docs/">{t('hero.cta_secondary')}<span className="btn-arrow">→</span></a>
+        </div>
+        <p className="hero-platform">{t('hero.platform')} <strong>macOS</strong>, <strong>Linux</strong> &amp; <strong>Windows</strong></p>
       </div>
-      <div class="adv-field">
-        <label>Loại hình DN</label>
-        <select><option value="">Tất cả</option><option>Công ty TNHH</option><option>Công ty CP</option><option>DNTN</option></select>
+      <div className="hero-screenshot reveal" onClick={onOpenLightbox}>
+        <div className="hero-screenshot-glow"></div>
+        <img src="assets/screens/hero-mockup.png" alt="Spec ADE — Agent-Native IDE" loading="eager"/>
+        <div className="hero-screenshot-hint">{t('hero.screenshot_hint')}</div>
       </div>
-      <div class="adv-field">
-        <label>Tình trạng</label>
-        <select><option value="">Tất cả</option><option>Đang hoạt động</option><option>Ngừng hoạt động</option><option>Tạm ngừng</option></select>
+    </div></section>
+  );
+}
+
+/* === LIGHTBOX === */
+function Lightbox({open,onClose}){
+  const[scene,setScene]=useState('files');
+  useEffect(()=>{
+    if(!open)return;
+    const h=e=>{if(e.key==='Escape')onClose();};
+    window.addEventListener('keydown',h);
+    return()=>window.removeEventListener('keydown',h);
+  },[open,onClose]);
+  if(!open)return null;
+  return(
+    <div className="lightbox-overlay" role="dialog" aria-modal="true" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <button className="lightbox-close" onClick={onClose} aria-label="Close">×</button>
+      <div>
+        <div className="lightbox-content"><AppMockup scene={scene}/></div>
+        <div className="lightbox-tabs">
+          {[['files','File & Chat'],['git','Git'],['projects','Projects'],['claw','New Claw']].map(([id,label])=>(
+            <button key={id} className={`lightbox-tab${scene===id?' on':''}`} onClick={()=>setScene(id)}>{label}</button>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-  <div class="search-helper">Hỗ trợ tìm không dấu • Nhập tối đa 5 MST (ngăn cách bởi dấu phẩy)</div>
-</section>
+  );
+}
 
-<!-- MAIN CONTENT -->
-<div class="main-wrap">
-  <main class="main-content">
-    <!-- DN MỚI THÀNH LẬP -->
-    <section>
-      <div class="section-header">
-        <h2>Doanh nghiệp mới thành lập</h2>
-        <a href="/moi-thanh-lap" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === COMPARISON === */
+function Comparison(){
+  const{t}=useLocale();
+  return(
+    <section className="section" id="comparison"><div className="shell">
+      <div className="section-head center reveal">
+        <div className="section-tag">{t('compare.tag')}</div>
+        <h2 className="section-title">{t('compare.title')} <em>{t('compare.title_em')}</em></h2>
+        <p className="section-sub" style={{margin:'0 auto'}}>{t('compare.sub')}</p>
       </div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0316789012">CÔNG TY CỔ PHẦN CÔNG NGHỆ VIETTECH</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0316789012</span><span class="label">Đại diện:</span><span class="value">Trần Minh Đức</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">45 Lê Lợi, Q.1, TP. Hồ Chí Minh</span><span class="date-label">Thành lập:</span><span class="date-val">28/03/2026</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0109876543">CÔNG TY TNHH SẢN XUẤT THỰC PHẨM SẠCH XANH</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0109876543</span><span class="label">Đại diện:</span><span class="value">Lê Thị Hương</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">78 Trần Phú, Ba Đình, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">25/03/2026</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/3602345678">CÔNG TY TNHH VẬN TẢI LOGISTICS MIỀN NAM</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">3602345678</span><span class="label">Đại diện:</span><span class="value">Phạm Văn Hùng</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">12 Nguyễn Ái Quốc, Biên Hòa, Đồng Nai</span><span class="date-label">Thành lập:</span><span class="date-val">22/03/2026</span></div></div></div>
-    </section>
+      <div className="compare-grid reveal">
+        <div className="compare-card">
+          <div className="compare-label bad">{t('compare.bad_label')}</div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat1_label')}</span><span className="compare-stat-value">{t('compare.stat1_bad')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat2_label')}</span><span className="compare-stat-value">{t('compare.stat2_bad')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat3_label')}</span><span className="compare-stat-value">{t('compare.stat3_bad')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat4_label')}</span><span className="compare-stat-value">{t('compare.stat4_bad')}</span></div>
+          <p className="compare-note">{t('compare.bad_note')}</p>
+        </div>
+        <div className="compare-card highlight">
+          <div className="compare-label good">{t('compare.good_label')}</div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat1_label')}</span><span className="compare-stat-value">{t('compare.stat1_good')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat2_label')}</span><span className="compare-stat-value">{t('compare.stat2_good')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat3_label')}</span><span className="compare-stat-value">{t('compare.stat3_good')}</span></div>
+          <div className="compare-stat"><span className="compare-stat-label">{t('compare.stat4_label')}</span><span className="compare-stat-value">{t('compare.stat4_good')}</span></div>
+          <p className="compare-note" style={{color:'var(--accent-lime)'}}>{t('compare.good_note')}</p>
+        </div>
+      </div>
+    </div></section>
+  );
+}
 
-    <!-- DN NỔI BẬT -->
-    <section>
-      <div class="section-header">
-        <h2>Doanh nghiệp nổi bật</h2>
-        <a href="/noi-bat" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === FEATURE DEEP DIVE === */
+function FeatureDeepDive(){
+  const{t}=useLocale();
+  return(
+    <section className="section"><div className="shell">
+      <div className="deep-grid">
+        <div className="deep-card reveal">
+          <div className="section-tag">{t('deep.tag1')}</div>
+          <h3>{t('deep.title1')}</h3>
+          <p>{t('deep.desc1')}</p>
+          <div className="deep-stats">
+            <div className="deep-stat"><span className="val"><Counter to={50} suffix="ms"/></span><span className="lbl">{t('deep.stat1_lbl')}</span></div>
+            <div className="deep-stat"><span className="val"><Counter to={12} suffix="×"/></span><span className="lbl">{t('deep.stat2_lbl')}</span></div>
+          </div>
+        </div>
+        <div className="deep-card reveal">
+          <div className="section-tag">{t('deep.tag2')}</div>
+          <h3>{t('deep.title2')}</h3>
+          <p>{t('deep.desc2')}</p>
+          <ul className="deep-features">
+            <li>{t('deep.feat1')}</li>
+            <li>{t('deep.feat2')}</li>
+            <li>{t('deep.feat3')}</li>
+            <li>{t('deep.feat4')}</li>
+          </ul>
+        </div>
       </div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0101245486">TẬP ĐOÀN VINGROUP - CÔNG TY CP</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0101245486</span><span class="label">Đại diện:</span><span class="value">Phạm Nhật Vượng</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">Số 7, Đường Bằng Lăng 1, Vinhomes Riverside, Long Biên, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">03/06/1993</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0300588569">CÔNG TY CỔ PHẦN SỮA VIỆT NAM VINAMILK</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0300588569</span><span class="label">Đại diện:</span><span class="value">Mai Kiều Liên</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">10 Tân Trào, Q.7, TP. Hồ Chí Minh</span><span class="date-label">Thành lập:</span><span class="date-val">20/11/2003</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0100112437">NGÂN HÀNG TMCP NGOẠI THƯƠNG VIỆT NAM</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0100112437</span><span class="label">Đại diện:</span><span class="value">Phạm Quang Dũng</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">198 Trần Quang Khải, Hoàn Kiếm, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">01/04/1963</span></div></div></div>
-    </section>
+    </div></section>
+  );
+}
 
-    <!-- DN THEO TỈNH THÀNH -->
-    <section>
-      <div class="section-header">
-        <h2>Doanh nghiệp theo tỉnh thành</h2>
-        <a href="/tinh-thanh" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === FEATURES GRID === */
+function Features(){
+  const{t}=useLocale();
+  const feats=[
+    {icon:'▸',titleKey:'feat.terminal',descKey:'feat.terminal_desc'},
+    {icon:'◇',titleKey:'feat.chat',descKey:'feat.chat_desc'},
+    {icon:'⎇',titleKey:'feat.git',descKey:'feat.git_desc'},
+    {icon:'⊕',titleKey:'feat.worktrees',descKey:'feat.worktrees_desc'},
+    {icon:'◈',titleKey:'feat.skills',descKey:'feat.skills_desc'},
+    {icon:'🛡',titleKey:'feat.permissions',descKey:'feat.permissions_desc'},
+  ];
+  return(
+    <section className="section" id="features"><div className="shell">
+      <div className="section-head center reveal">
+        <div className="section-tag">{t('feat.tag')}</div>
+        <h2 className="section-title">{t('feat.title')} <em>{t('feat.title_em')}</em></h2>
+        <p className="section-sub" style={{margin:'0 auto'}}>{t('feat.sub')}</p>
       </div>
-      <div class="pill-tabs">
-        <div class="pill-tab active">Hà Nội</div>
-        <div class="pill-tab">TP.HCM</div>
-        <div class="pill-tab">Đà Nẵng</div>
-        <div class="pill-tab">Hải Phòng</div>
-        <div class="pill-tab">Đồng Nai</div>
+      <div className="feat-grid">
+        {feats.map((f,i)=>(
+          <div key={i} className="feat-card reveal">
+            <div className="feat-icon">{f.icon}</div>
+            <h3>{t(f.titleKey)}</h3>
+            <p>{t(f.descKey)}</p>
+          </div>
+        ))}
       </div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0101248141">CÔNG TY CỔ PHẦN TẬP ĐOÀN FPT</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0101248141</span><span class="label">Đại diện:</span><span class="value">Trương Gia Bình</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">Tòa nhà FPT, 17 Duy Tân, Cầu Giấy, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">13/09/1988</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0301428701">CÔNG TY CỔ PHẦN VÀNG BẠC ĐÁ QUÝ PHÚ NHUẬN</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0301428701</span><span class="label">Đại diện:</span><span class="value">Cao Thị Ngọc Dung</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">170E Phan Đăng Lưu, Phú Nhuận, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">02/04/2004</span></div></div></div>
-    </section>
+    </div></section>
+  );
+}
 
-    <!-- DN THEO NGÀNH NGHỀ -->
-    <section>
-      <div class="section-header">
-        <h2>Doanh nghiệp theo ngành nghề</h2>
-        <a href="/nganh-nghe" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === USE CASES === */
+function UseCases(){
+  const{t}=useLocale();
+  const cases=[
+    {titleKey:'usecase.solo',descKey:'usecase.solo_desc',accent:'var(--violet-300)',icon:'🚀'},
+    {titleKey:'usecase.enterprise',descKey:'usecase.enterprise_desc',accent:'var(--accent-cyan)',icon:'🏛'},
+    {titleKey:'usecase.platform',descKey:'usecase.platform_desc',accent:'var(--accent-lime)',icon:'⚡'},
+    {titleKey:'usecase.agency',descKey:'usecase.agency_desc',accent:'var(--accent-amber)',icon:'🏢'},
+  ];
+  return(
+    <section className="section" id="usecases"><div className="shell">
+      <div className="section-head center reveal">
+        <div className="section-tag">{t('usecase.tag')}</div>
+        <h2 className="section-title">{t('usecase.title')} <em>{t('usecase.title_em')}</em></h2>
       </div>
-      <div class="pill-tabs">
-        <div class="pill-tab active">Xây dựng</div>
-        <div class="pill-tab">Bán lẻ</div>
-        <div class="pill-tab">Vận tải</div>
-        <div class="pill-tab">Công nghệ</div>
-        <div class="pill-tab">Bất động sản</div>
+      <div className="usecases">
+        {cases.map((c,i)=>(
+          <div key={i} className="usecase reveal">
+            <div className="usecase-icon" style={{background:`${c.accent}15`,border:`1px solid ${c.accent}30`}}><span>{c.icon}</span></div>
+            <h3>{t(c.titleKey)}</h3><p>{t(c.descKey)}</p>
+          </div>
+        ))}
       </div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0302029577">CÔNG TY CỔ PHẦN XÂY DỰNG COTECCONS</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0302029577</span><span class="label">Đại diện:</span><span class="value">Bolat Duisenov</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">236/6 Điện Biên Phủ, Q.3, TP. Hồ Chí Minh</span><span class="date-label">Thành lập:</span><span class="date-val">17/06/2004</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0100101072">TỔNG CÔNG TY XÂY DỰNG SỐ 1 - CTCP</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0100101072</span><span class="label">Đại diện:</span><span class="value">Lê Văn Nam</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">59 Lý Thái Tổ, Hoàn Kiếm, Hà Nội</span><span class="date-label">Thành lập:</span><span class="date-val">01/01/1979</span></div></div></div>
-    </section>
+    </div></section>
+  );
+}
 
-    <!-- DN THEO LOẠI HÌNH -->
-    <section>
-      <div class="section-header">
-        <h2>Doanh nghiệp theo loại hình</h2>
-        <a href="/loai-hinh" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === ROADMAP === */
+function Roadmap(){
+  const{t}=useLocale();
+  const items=[
+    {status:'live',titleKey:'roadmap.terminal',descKey:'roadmap.terminal_desc'},
+    {status:'live',titleKey:'roadmap.git',descKey:'roadmap.git_desc'},
+    {status:'live',titleKey:'roadmap.chat',descKey:'roadmap.chat_desc'},
+    {status:'wip',titleKey:'roadmap.acp',descKey:'roadmap.acp_desc'},
+    {status:'wip',titleKey:'roadmap.desktop',descKey:'roadmap.desktop_desc'},
+    {status:'future',titleKey:'roadmap.marketplace',descKey:'roadmap.marketplace_desc'},
+  ];
+  return(
+    <section className="section" id="roadmap"><div className="shell">
+      <div className="section-head center reveal">
+        <div className="section-tag">{t('roadmap.tag')}</div>
+        <h2 className="section-title">{t('roadmap.title')} <em>{t('roadmap.title_em')}</em></h2>
+        <p className="section-sub" style={{margin:'0 auto'}}>{t('roadmap.sub')}</p>
       </div>
-      <div class="pill-tabs">
-        <div class="pill-tab active">Công ty TNHH</div>
-        <div class="pill-tab">Công ty CP</div>
-        <div class="pill-tab">DNTN</div>
+      <div className="roadmap-grid">
+        {items.map((item,i)=>(
+          <div key={i} className="roadmap-card reveal">
+            <div className={`roadmap-badge ${item.status}`}>{t(`roadmap.${item.status}`)}</div>
+            <h3>{t(item.titleKey)}</h3>
+            <p>{t(item.descKey)}</p>
+          </div>
+        ))}
       </div>
-      <div class="status-tags">
-        <span class="status-tag amber">Đang hoạt động</span>
-        <span class="status-tag red">Ngừng hoạt động</span>
-      </div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0300104828">CÔNG TY TNHH MTV DỊCH VỤ DU LỊCH SAIGONTOURIST</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0300104828</span><span class="label">Đại diện:</span><span class="value">Phạm Huy Bình</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">23 Lê Lợi, Q.1, TP. Hồ Chí Minh</span><span class="date-label">Thành lập:</span><span class="date-val">01/08/1975</span></div></div></div>
-      <div class="biz-card"><div class="biz-name"><a href="/dn/0800385869">CÔNG TY CỔ PHẦN THÉP HÒA PHÁT</a></div><div class="biz-meta"><div class="meta-row"><span class="label">MST:</span><span class="value">0800385869</span><span class="label">Đại diện:</span><span class="value">Trần Đình Long</span></div><div class="meta-row"><span class="date-label">Địa chỉ:</span><span class="addr">KCN Phố Nối A, Văn Lâm, Hưng Yên</span><span class="date-label">Thành lập:</span><span class="date-val">05/08/1992</span></div></div></div>
-    </section>
+    </div></section>
+  );
+}
 
-    <!-- BÀI VIẾT HƯỚNG DẪN -->
-    <section>
-      <div class="section-header">
-        <h2>Bài viết hướng dẫn</h2>
-        <a href="/huong-dan" class="view-more">Xem thêm <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+/* === CTA === */
+function CTA(){
+  const{t}=useLocale();
+  return(
+    <section className="section" id="download"><div className="shell">
+      <div className="cta-final reveal">
+        <h2>{t('cta.title1')}<br/><em>{t('cta.title2')}</em></h2>
+        <p>{t('cta.sub')}</p>
+        <div className="btn-row">
+          <a className="btn btn-primary" href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">{t('cta.primary')}<span className="btn-arrow">↗</span></a>
+          <a className="btn btn-ghost" href="#">npm i -g @spec-ade/cli</a>
+        </div>
       </div>
-      <div class="articles-grid">
-        <a href="/huong-dan/tra-cuu-mst" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Hướng dẫn tra cứu mã số thuế doanh nghiệp nhanh nhất 2026</div><div class="a-date">28/03/2026</div></a>
-        <a href="/huong-dan/loai-hinh-dn" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Phân biệt các loại hình doanh nghiệp tại Việt Nam</div><div class="a-date">25/03/2026</div></a>
-        <a href="/huong-dan/dang-ky-dn" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Thủ tục đăng ký thành lập doanh nghiệp mới nhất</div><div class="a-date">22/03/2026</div></a>
-        <a href="/huong-dan/kiem-tra-tinh-trang" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Cách kiểm tra tình trạng hoạt động của doanh nghiệp</div><div class="a-date">20/03/2026</div></a>
-        <a href="/huong-dan/mst-ca-nhan" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Mã số thuế cá nhân là gì? Cách tra cứu MST cá nhân</div><div class="a-date">18/03/2026</div></a>
-        <a href="/huong-dan/nganh-nghe-pho-bien" class="article-card"><div class="thumb">Hình ảnh</div><div class="a-title">Top 10 ngành nghề kinh doanh phổ biến nhất Việt Nam</div><div class="a-date">15/03/2026</div></a>
+    </div></section>
+  );
+}
+
+/* === FOOTER === */
+function Footer(){
+  const{t}=useLocale();
+  return(
+    <footer className="shell">
+      <div className="footer-min">
+        <div className="footer-left">
+          <img src="assets/favicon-128x128.png" alt="Spec ADE" style={{width:18,height:18,borderRadius:5}}/>
+          <span>{t('footer.copyright')}</span>
+          <span style={{color:'var(--ink-4)'}}>v0.4.6 · <span style={{color:'var(--accent-lime)'}}>● operational</span></span>
+        </div>
+        <div className="footer-links">
+          <a href="#download">{t('footer.download')}</a>
+          <a href="docs/">{t('footer.docs')}</a>
+        </div>
       </div>
-    </section>
-  </main>
-  <aside class="sidebar">
-    <div class="ad-placeholder">Quảng cáo</div>
-    <div class="sidebar-block">
-      <div class="sb-header">63 Tỉnh/Thành phố</div>
-      <div class="province-grid">
-        <a href="/tinh-thanh/ha-noi">Hà Nội</a>
-        <a href="/tinh-thanh/tp-hcm">TP. Hồ Chí Minh</a>
-        <a href="/tinh-thanh/da-nang">Đà Nẵng</a>
-        <a href="/tinh-thanh/hai-phong">Hải Phòng</a>
-        <a href="/tinh-thanh/dong-nai">Đồng Nai</a>
-        <a href="/tinh-thanh/binh-duong">Bình Dương</a>
-        <a href="/tinh-thanh/can-tho">Cần Thơ</a>
-        <a href="/tinh-thanh/nghe-an">Nghệ An</a>
-        <a href="/tinh-thanh/thanh-hoa">Thanh Hóa</a>
-        <a href="/tinh-thanh/quang-ninh">Quảng Ninh</a>
-        <a href="/tinh-thanh/bac-ninh">Bắc Ninh</a>
-        <a href="/tinh-thanh/khanh-hoa">Khánh Hòa</a>
+    </footer>
+  );
+}
+
+/* === APP === */
+function App(){
+  useReveal();
+  const[lightboxOpen,setLightboxOpen]=useState(false);
+
+  /* Task 3: Card cursor-tracking glow */
+  useEffect(()=>{
+    const handler=(e)=>{const el=e.currentTarget;const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px');};
+    let cards;
+    const init=()=>{cards=document.querySelectorAll('.feat-card,.usecase,.roadmap-card,.deep-card');cards.forEach(c=>c.addEventListener('mousemove',handler));};
+    const t=setTimeout(init,100);
+    return()=>{clearTimeout(t);if(cards)cards.forEach(c=>c.removeEventListener('mousemove',handler));};
+  },[]);
+
+  /* Task 8: Aurora parallax on scroll */
+  useEffect(()=>{
+    const auroras=document.querySelectorAll('.bg-aurora');
+    const onScroll=()=>{const y=window.scrollY;auroras.forEach((a,i)=>{a.style.translate=`0 ${y*(0.05+i*0.03)}px`;});};
+    window.addEventListener('scroll',onScroll,{passive:true});
+    return()=>window.removeEventListener('scroll',onScroll);
+  },[]);
+
+  /* Task 9: Hero screenshot 3D tilt */
+  useEffect(()=>{
+    const el=document.querySelector('.hero-screenshot');
+    if(!el)return;
+    const handler=(e)=>{const r=el.getBoundingClientRect();const cx=r.left+r.width/2;const cy=r.top+r.height/2;const rx=((e.clientY-cy)/r.height)*-3;const ry=((e.clientX-cx)/r.width)*3;el.style.transform=`perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`;};
+    const reset=()=>{el.style.transform='';};
+    el.addEventListener('mousemove',handler);el.addEventListener('mouseleave',reset);
+    return()=>{el.removeEventListener('mousemove',handler);el.removeEventListener('mouseleave',reset);};
+  },[]);
+
+  return(
+    <>
+      <ScrollProgress/>
+      <CursorGlow/>
+      <div className="bg-fx">
+        <div className="bg-grid"></div>
+        <div className="bg-aurora a1"></div>
+        <div className="bg-aurora a2"></div>
+        <div className="bg-aurora a3"></div>
       </div>
-      <a href="/tinh-thanh" class="province-more">Xem tất cả 63 tỉnh thành →</a>
-    </div>
-    <div class="sidebar-block sidebar-articles">
-      <div class="sb-header">Bài viết mới nhất</div>
-      <a class="sa-item" href="/huong-dan/tra-cuu-mst"><span class="sa-title">Hướng dẫn tra cứu mã số thuế doanh nghiệp nhanh nhất</span><span class="sa-date">28/03/2026</span></a>
-      <a class="sa-item" href="/huong-dan/loai-hinh-dn"><span class="sa-title">Phân biệt các loại hình doanh nghiệp tại Việt Nam</span><span class="sa-date">25/03/2026</span></a>
-      <a class="sa-item" href="/huong-dan/dang-ky-dn"><span class="sa-title">Thủ tục đăng ký thành lập doanh nghiệp mới nhất</span><span class="sa-date">22/03/2026</span></a>
-      <a class="sa-item" href="/huong-dan/kiem-tra-tinh-trang"><span class="sa-title">Cách kiểm tra tình trạng hoạt động doanh nghiệp</span><span class="sa-date">20/03/2026</span></a>
-      <a class="sa-item" href="/huong-dan/mst-ca-nhan"><span class="sa-title">Mã số thuế cá nhân là gì? Cách tra cứu MST cá nhân</span><span class="sa-date">18/03/2026</span></a>
-    </div>
-  </aside>
-</div>
+      <Nav/>
+      <Hero onOpenLightbox={()=>setLightboxOpen(true)}/>
+      <Comparison/>
+      <FeatureDeepDive/>
+      <Features/>
+      <UseCases/>
+      <Roadmap/>
+      <CTA/>
+      <Footer/>
+      <Lightbox open={lightboxOpen} onClose={()=>setLightboxOpen(false)}/>
+    </>
+  );
+}
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-cols">
-    <div class="footer-col">
-      <h4>VỀ MASOTHUEVN.ORG</h4>
-      <p class="f-desc">Danh bạ doanh nghiệp Việt Nam. Tra cứu mã số thuế, thông tin doanh nghiệp nhanh chóng và chính xác từ cơ sở dữ liệu hơn 900.000 DN.</p>
-    </div>
-    <div class="footer-col">
-      <h4>ĐIỀU HƯỚNG</h4>
-      <a href="/tra-cuu/doanh-nghiep">Tra cứu MST doanh nghiệp</a>
-      <a href="/tra-cuu/ca-nhan">Tra cứu MST cá nhân</a>
-      <a href="/moi-thanh-lap">DN mới thành lập</a>
-      <a href="/huong-dan">Hướng dẫn</a>
-      <a href="/blog">Blog</a>
-    </div>
-    <div class="footer-col">
-      <h4>DANH MỤC</h4>
-      <a href="/tinh-thanh">Theo tỉnh thành</a>
-      <a href="/nganh-nghe">Theo ngành nghề</a>
-      <a href="/loai-hinh">Loại hình doanh nghiệp</a>
-      <a href="/tinh-trang">Tình trạng hoạt động</a>
-    </div>
-    <div class="footer-col">
-      <h4>LIÊN HỆ</h4>
-      <p class="f-contact">Email: info@masothuevn.org</p>
-      <p class="f-contact">Hotline: 1900-xxxx</p>
-      <a href="/gioi-thieu">Giới thiệu</a>
-      <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
-      <a href="/dieu-khoan">Điều khoản sử dụng</a>
-    </div>
-  </div>
-  <hr class="footer-divider">
-  <div class="footer-bottom">
-    <p>&copy; 2026 masothuevn.org — Danh bạ Doanh nghiệp Việt Nam</p>
-  </div>
-</footer>
-
-<script>
-// Sticky search on scroll
-const searchSection = document.getElementById('searchSection');
-const sticky = document.getElementById('stickySearch');
-const observer = new IntersectionObserver(([e]) => {
-  sticky.classList.toggle('visible', !e.isIntersecting);
-}, { threshold: 0 });
-observer.observe(searchSection);
-
-// Hamburger menu toggle
-const hamburger = document.getElementById('hamburgerBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-hamburger.addEventListener('click', () => {
-  mobileMenu.classList.toggle('open');
-  mobileMenu.style.display = mobileMenu.classList.contains('open') ? 'block' : '';
-  setTimeout(() => {
-    if (!mobileMenu.classList.contains('open')) mobileMenu.style.display = 'none';
-  }, 300);
-});
-
-// Advanced search toggle
-const btnAdv = document.getElementById('btnAdvanced');
-const advPanel = document.getElementById('advancedSearch');
-btnAdv.addEventListener('click', () => {
-  btnAdv.classList.toggle('open');
-  advPanel.classList.toggle('open');
-});
+ReactDOM.createRoot(document.getElementById('root')).render(<LocaleProvider><App/></LocaleProvider>);
 </script>
 </body>
 </html>

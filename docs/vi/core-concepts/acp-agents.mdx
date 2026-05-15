@@ -1,0 +1,86 @@
+---
+title: ACP Agents
+description: Tích hợp Agent Client Protocol — agent tùy chỉnh, chế độ PTY vs ACP.
+---
+
+# ACP Agents
+
+Spec ADE hỗ trợ **Agent Client Protocol (ACP)** để kết nối với các AI agent ngoài các CLI tích hợp sẵn Auggie và Claude Code. ACP cho phép giao tiếp có cấu trúc với các agent triển khai protocol này.
+
+## Đăng ký agent
+
+Các agent được đăng ký trong `settings.json`:
+
+```json
+{
+  "agents": [
+    {
+      "id": "builtin:auggie",
+      "name": "Auggie",
+      "mode": "pty"
+    },
+    {
+      "id": "builtin:claude",
+      "name": "Claude Code",
+      "mode": "pty"
+    },
+    {
+      "id": "custom:my-agent",
+      "name": "My Custom Agent",
+      "mode": "acp",
+      "command": "/usr/local/bin/my-agent",
+      "args": ["--mode", "acp"],
+      "env": {
+        "API_KEY": "..."
+      }
+    }
+  ]
+}
+```
+
+## Chế độ PTY vs ACP
+
+| Khía cạnh | Chế độ PTY | Chế độ ACP |
+|-----------|-----------|-----------|
+| Giao tiếp | Raw terminal I/O qua WebSocket | Tin nhắn JSON có cấu trúc qua ACP protocol |
+| Giao diện | Trình giả lập terminal xterm | Giao diện chat phong phú với tool call |
+| Agent tích hợp | Auggie, Claude Code | Agent tùy chỉnh |
+| Xử lý quyền | Cấp terminal (chấp thuận/từ chối trong terminal) | Yêu cầu quyền có cấu trúc qua UI/Telegram |
+| Lịch sử | Terminal replay buffer | Lịch sử tin nhắn có cấu trúc (JSON) |
+
+## Cách ACP hoạt động
+
+1. **Spawn** — `POST /api/acp/spawn` khởi động tiến trình agent
+2. **Connect** — WebSocket tại `/api/acp/{id}/ws` chuyển tiếp tin nhắn
+3. **Communicate** — Agent gửi/nhận các event có cấu trúc:
+   - `message_chunk` / `thought_chunk` — văn bản streaming
+   - `tool_call` / `tool_call_update` — thực thi tool
+   - `permission_request` — yêu cầu phê duyệt từ người dùng
+   - `session_state` — thay đổi trạng thái agent
+   - `plan` — kế hoạch thực thi của agent
+4. **Idle** — Agent chờ prompt tiếp theo
+
+## Pattern attach-or-spawn
+
+Khi kết nối với một ACP agent, Spec ADE kiểm tra xem kết nối đang hoạt động đã tồn tại chưa:
+- **Đã tồn tại** — kết nối lại với agent đang chạy
+- **Chưa tồn tại** — tạo tiến trình mới
+
+Các kết nối idle được dọn dẹp sau mỗi 5 phút.
+
+## Phát lại event
+
+Các kết nối ACP duy trì một event log với số thứ tự đơn điệu tăng. Khi một WebSocket kết nối lại, client gửi `?after_seq=N` và backend phát lại các event bị bỏ lỡ trước khi chuyển sang streaming trực tiếp.
+
+## Đăng ký agent tùy chỉnh
+
+Để thêm agent của riêng bạn:
+
+1. Triển khai [Agent Client Protocol](https://github.com/anthropics/agent-client-protocol) trong agent của bạn
+2. Thêm một mục vào mảng `agents` trong settings với `mode: "acp"`
+3. Chỉ định `command`, `args` và `env` tùy chọn để khởi chạy agent
+4. Agent xuất hiện trong dropdown tạo session
+
+<Note>
+  Các kết nối ACP chạy trên các luồng riêng (không phải async tokio runtime) vì các ACP future là `!Send`. Mỗi kết nối có runtime tokio đơn luồng riêng với một `LocalSet`.
+</Note>

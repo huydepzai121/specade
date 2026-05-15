@@ -1,0 +1,53 @@
+---
+title: Giám sát tiến trình
+description: Metric hệ thống, giám sát GPU, quản lý tiến trình và biểu đồ sparkline.
+---
+
+# Giám sát tiến trình
+
+Spec ADE bao gồm trình giám sát tiến trình tích hợp hiển thị metric hệ thống, tiến trình đang chạy và thông tin GPU tùy chọn.
+
+## Metric hệ thống
+
+Trình giám sát hiển thị thông tin hệ thống thời gian thực qua crate `sysinfo`:
+
+- **Sử dụng CPU** — theo từng core và tổng hợp
+- **Bộ nhớ** — đã dùng, tổng, phần trăm
+- **Tiến trình** — danh sách tiến trình đang chạy với mức sử dụng CPU/bộ nhớ
+
+Metric được poll mỗi 3 giây.
+
+## Giám sát GPU
+
+Trên hệ thống có GPU NVIDIA, Spec ADE sử dụng **NVML** (NVIDIA Management Library) để hiển thị:
+
+- Phần trăm sử dụng GPU
+- Sử dụng bộ nhớ GPU
+- Nhiệt độ GPU
+
+Giám sát GPU giảm cấp nhẹ nhàng — nếu NVML không có sẵn, metric GPU đơn giản được bỏ qua.
+
+## Danh sách tiến trình
+
+Bảng tiến trình hiển thị:
+
+| Cột | Mô tả |
+|-----|-------|
+| PID | ID tiến trình |
+| Name | Tên tiến trình |
+| CPU % | Phần trăm sử dụng CPU |
+| Memory | Sử dụng bộ nhớ |
+| Status | Đang chạy, ngủ, v.v. |
+
+Tính năng:
+- **Sắp xếp** theo bất kỳ cột nào (nhấn header)
+- **Lọc** theo tên tiến trình
+- **Kill** tiến trình (có xác nhận)
+
+## Biểu đồ sparkline
+
+Mỗi metric bao gồm biểu đồ sparkline hiển thị lịch sử gần đây — đồ thị đường nhỏ gọn vừa trong một hàng. Sparkline sử dụng component `MiniSparkline`.
+
+## Triển khai
+
+Backend sử dụng `spawn_blocking` + `blocking_lock()` trên async mutex cho metric hệ thống để tránh block tokio runtime. Endpoint `/api/system/metrics` trả về dữ liệu CPU, bộ nhớ và tiến trình.

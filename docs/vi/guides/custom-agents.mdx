@@ -1,0 +1,101 @@
+---
+title: Agent tùy chỉnh
+description: Đăng ký và cấu hình AI agent tùy chỉnh với chế độ PTY hoặc ACP.
+---
+
+# Agent tùy chỉnh
+
+Spec ADE đi kèm hai agent tích hợp (Auggie và Claude Code) nhưng hỗ trợ thêm bất kỳ công cụ lập trình AI nào dưới dạng agent tùy chỉnh.
+
+## Đăng ký agent
+
+Agent được định nghĩa trong `~/.config/spec-ade/settings.json` dưới mảng `agents`:
+
+```json
+{
+  "agents": [
+    {
+      "id": "builtin:auggie",
+      "name": "Auggie",
+      "mode": "pty"
+    },
+    {
+      "id": "builtin:claude",
+      "name": "Claude Code",
+      "mode": "pty"
+    }
+  ]
+}
+```
+
+## Thêm agent PTY
+
+Agent PTY chạy dưới dạng tiến trình terminal. Spec ADE tạo chúng trong pseudo-terminal và giao tiếp qua raw I/O.
+
+```json
+{
+  "id": "custom:aider",
+  "name": "Aider",
+  "mode": "pty",
+  "command": "aider",
+  "args": ["--no-auto-commits"],
+  "env": {
+    "OPENAI_API_KEY": "sk-..."
+  }
+}
+```
+
+| Trường | Kiểu | Mô tả |
+|--------|------|-------|
+| `id` | string | Định danh duy nhất (prefix với `custom:`) |
+| `name` | string | Tên hiển thị trong UI |
+| `mode` | `"pty"` | Giao tiếp qua terminal |
+| `command` | string | Đường dẫn hoặc tên executable |
+| `args` | string[] | Tham số dòng lệnh |
+| `env` | object | Biến môi trường |
+
+## Thêm agent ACP
+
+Agent ACP triển khai [Agent Client Protocol](https://github.com/anthropics/agent-client-protocol) cho giao tiếp có cấu trúc.
+
+```json
+{
+  "id": "custom:my-agent",
+  "name": "My Agent",
+  "mode": "acp",
+  "command": "/usr/local/bin/my-agent",
+  "args": ["--mode", "acp", "--project", "."],
+  "env": {
+    "API_KEY": "..."
+  }
+}
+```
+
+Agent ACP có trải nghiệm UI phong phú hơn:
+- Hiển thị tin nhắn có cấu trúc (không phải output terminal thô)
+- Hiển thị tool call với chỉ báo trạng thái
+- Dialog yêu cầu quyền
+- Hiển thị kế hoạch thực thi
+- Hiển thị suy luận/thought
+
+## PTY vs ACP: khi nào dùng cái nào
+
+| Dùng PTY khi... | Dùng ACP khi... |
+|-----------------|-----------------|
+| Công cụ là CLI đọc/ghi stdin/stdout | Công cụ triển khai giao thức ACP |
+| Bạn muốn truy cập terminal thô | Bạn muốn hiển thị tool call có cấu trúc |
+| Công cụ không hỗ trợ ACP | Bạn cần quản lý quyền |
+| Tích hợp nhanh (bất kỳ CLI nào đều hoạt động) | Tích hợp UI phong phú |
+
+## Giải quyết command
+
+Spec ADE giải quyết command đa nền tảng:
+- **Unix**: thực thi trực tiếp
+- **Windows**: tìm kiếm extension `.exe`, `.cmd`, `.bat`, `.ps1`, cache đường dẫn đã giải quyết
+
+## Kiểm tra agent
+
+1. Thêm agent vào `settings.json`
+2. Khởi động lại Spec ADE (hoặc nó nhận thay đổi khi tạo session mới)
+3. Tạo session mới và chọn agent từ dropdown
+4. Xác nhận agent khởi động và phản hồi tin nhắn

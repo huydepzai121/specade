@@ -1,0 +1,61 @@
+---
+title: Terminal
+description: Terminal PTY tích hợp với xterm.js, slash command và hỗ trợ shell đa nền tảng.
+---
+
+# Terminal
+
+Spec ADE bao gồm trình giả lập terminal đầy đủ chạy bằng xterm.js và PTY (pseudo-terminal) ở backend. Đây không phải console đơn giản — đây là terminal thật hỗ trợ màu sắc, di chuyển con trỏ và chương trình tương tác.
+
+## Giả lập terminal
+
+Terminal sử dụng:
+- **xterm.js** (v6) ở frontend để render
+- **portable-pty** ở backend để tạo PTY
+- **WebSocket** cho I/O thời gian thực (`/api/terminals/{id}/ws`)
+
+### Giao thức WebSocket
+
+| Hướng | Event | Mô tả |
+|-------|-------|-------|
+| Client → Server | `input` | Input terminal thô |
+| Client → Server | `submit` | Nội dung + Enter |
+| Client → Server | `resize` | Kích thước terminal (cols, rows) |
+| Server → Client | `output` | Output PTY |
+| Server → Client | `ready` | Agent sẵn sàng (phát hiện bracketed paste) |
+| Server → Client | `exit` | Process thoát với mã |
+
+## Hỗ trợ shell
+
+| Nền tảng | Shell mặc định |
+|----------|---------------|
+| macOS/Linux | `$SHELL -l` (login shell) |
+| Windows | `pwsh.exe` > `cmd.exe` (ưu tiên PowerShell) |
+
+## Slash command
+
+Slash command là cách gọi skill và lệnh từ terminal:
+
+```
+/ → (delay) → command-name → Tab → args → Enter
+```
+
+Chuỗi sử dụng raw key event ngoài bracketed paste mode. Thời gian có thể cấu hình:
+- `slashCommandDelayMs` — delay sau `/`
+- `tabDelayMs` — delay trước Tab
+- `enterDelayMs` — delay trước Enter
+
+## Phát lại terminal
+
+Khi kết nối lại session, terminal phát lại lịch sử. Phát lại được cắt tại escape sequence xóa màn hình cuối cùng để tránh hiển thị nội dung cũ. Query response (CPR, DA, focus sequence) được loại bỏ qua `stripTerminalQueryResponses()`.
+
+## Chi tiết PTY
+
+- **Write chunking**: Chunk 1KB với flush (`PTY_WRITE_CHUNK_SIZE = 1024`) để tránh tràn pipe buffer
+- **UTF-8 safety**: Buffer `utf8_leftover` xử lý ký tự multi-byte bị chia qua ranh giới chunk
+- **OSC 7**: Theo dõi CWD được parse từ output PTY để phát hiện thư mục làm việc
+- **OSC 5522**: Giao thức paste hình ảnh với mật khẩu một lần cho bảo mật
+
+## Helper `ade`
+
+Spec ADE inject helper shell `ade` vào session bash/zsh/sh (PowerShell trên Windows). Helper này cung cấp tích hợp giữa terminal và UI Spec ADE. Shell không xác định sẽ bỏ qua injection.

@@ -1,0 +1,73 @@
+---
+title: Giới thiệu
+description: Spec ADE là gì và tại sao nó tồn tại.
+---
+
+# Spec ADE là gì?
+
+Spec ADE là ứng dụng GUI full-stack cho các trợ lý lập trình AI. Nó cung cấp workspace thống nhất nơi bạn có thể:
+
+- **Chat với AI agent** qua WebSocket với streaming thời gian thực và hiển thị tool call
+- **Chạy terminal tích hợp** với PTY emulation đầy đủ (xterm.js)
+- **Duyệt và chỉnh sửa file** với CodeMirror 6 và syntax highlighting cho 15+ ngôn ngữ
+- **Quản lý git** với staging, commit, branch, merge editor và diff viewer
+- **Tạo agent tự động** (Claw) chạy skill theo lịch với quyền có thể cấu hình
+
+## Công cụ AI được hỗ trợ
+
+Spec ADE hoạt động với nhiều trợ lý lập trình AI:
+
+| Công cụ | Chế độ | Mô tả |
+|---------|--------|-------|
+| **Auggie CLI** | PTY | Agent CLI của Augment, chạy trong terminal |
+| **Claude Code** | PTY | Agent CLI của Anthropic, chạy trong terminal |
+| **ACP Agent** | ACP | Bất kỳ agent nào triển khai Agent Client Protocol |
+
+Mỗi session có thể dùng công cụ CLI khác nhau. Bạn có thể chạy Auggie trong một tab và Claude Code trong tab khác, trên cùng một project.
+
+## Kiến trúc tổng quan
+
+```
+┌─────────────────────────────────────────────┐
+│              Spec ADE Desktop               │
+│           (Tauri v2 / Browser / PWA)        │
+├─────────────────────────────────────────────┤
+│         Vue 3 + Quasar v2 Frontend          │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌───────────┐  │
+│  │ Chat │ │ Term │ │ Edit │ │ Git Panel │  │
+│  └──────┘ └──────┘ └──────┘ └───────────┘  │
+├─────────────────────────────────────────────┤
+│     REST API  │  WebSocket  │  SSE          │
+├─────────────────────────────────────────────┤
+│          Rust + Axum Backend                │
+│  ┌─────┐ ┌──────┐ ┌──────┐ ┌───────────┐  │
+│  │ PTY │ │ Git2 │ │ ACP  │ │ Settings  │  │
+│  └─────┘ └──────┘ └──────┘ └───────────┘  │
+└─────────────────────────────────────────────┘
+```
+
+- **Frontend** giao tiếp qua REST (CRUD), WebSocket (terminal/chat I/O) và SSE (git watch event)
+- **Backend** là một binary Rust duy nhất nhúng SPA qua `memory-serve` — không cần web server riêng
+- **Lưu trữ** nằm trong `~/.config/spec-ade/settings.json` — toàn bộ state được quản lý qua backend API
+
+## Khái niệm chính
+
+Trước khi đi sâu, đây là các thuật ngữ bạn sẽ gặp trong tài liệu:
+
+- **Project** — Một thư mục trên filesystem mà Spec ADE quản lý. Có file tree, session và layout riêng.
+- **Session** — Một instance chat/terminal kết nối với AI agent. Mỗi session thuộc về một project.
+- **Claw** — Một instance agent tự động. Claw chạy skill theo lịch, với chế độ quyền có thể cấu hình.
+- **Skill** — Prompt + cấu hình công cụ được đóng gói. Tái sử dụng được giữa các claw và project.
+- **Worktree** — Git worktree được gán cho agent, cho phép làm việc song song mà không xung đột branch.
+- **Pane** — Panel UI trong workspace. Pane có thể chia, resize và sắp xếp theo layout dạng cây.
+
+## Bước tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="Cài đặt Spec ADE" icon="download" href="/getting-started/installation">
+    Bắt đầu trên macOS, Linux hoặc Windows.
+  </Card>
+  <Card title="Bắt đầu nhanh" icon="rocket" href="/getting-started/quickstart">
+    Project đầu tiên và phiên agent trong 5 phút.
+  </Card>
+</CardGroup>

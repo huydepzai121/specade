@@ -1,0 +1,133 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Spec ADE",
+  "logo": {
+    "light": "/images/logo-light.svg",
+    "dark": "/images/logo-dark.svg"
+  },
+  "favicon": "/images/favicon.png",
+  "colors": {
+    "primary": "#7C5BE6",
+    "light": "#A78BFA",
+    "dark": "#6D28D9",
+    "background": {
+      "dark": "#0A0A0F"
+    }
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Home",
+          "href": "/",
+          "icon": "house"
+        }
+      ]
+    },
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "getting-started/introduction",
+              "getting-started/installation",
+              "getting-started/quickstart"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Core Concepts",
+        "groups": [
+          {
+            "group": "Workspace",
+            "pages": [
+              "core-concepts/projects",
+              "core-concepts/sessions",
+              "core-concepts/pane-system"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "core-concepts/claws",
+              "core-concepts/skills",
+              "core-concepts/acp-agents"
+            ]
+          },
+          {
+            "group": "Version Control",
+            "pages": [
+              "core-concepts/worktrees"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Features",
+        "groups": [
+          {
+            "group": "Editor & Terminal",
+            "pages": [
+              "features/chat-interface",
+              "features/terminal",
+              "features/file-editor"
+            ]
+          },
+          {
+            "group": "Git & Search",
+            "pages": [
+              "features/git-integration",
+              "features/search"
+            ]
+          },
+          {
+            "group": "System",
+            "pages": [
+              "features/keyboard-shortcuts",
+              "features/process-monitor",
+              "features/desktop-app"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Deployment",
+            "pages": [
+              "guides/self-hosting",
+              "guides/licensing"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "guides/custom-agents",
+              "guides/settings"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "topbar": {
+    "links": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/spec-ade"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/spec-ade",
+      "discord": "https://discord.gg/spec-ade",
+      "x": "https://x.com/spec_ade"
+    }
+  }
+}

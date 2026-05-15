@@ -1,0 +1,92 @@
+---
+title: Installation
+description: Install Spec ADE on macOS, Linux, or Windows.
+---
+
+# Installation
+
+## npm (recommended)
+
+The fastest way to install Spec ADE:
+
+```bash
+npm install -g @spec-ade/cli
+```
+
+This installs the `spec-ade` command globally. The package automatically downloads the correct binary for your platform.
+
+### Supported platforms
+
+| Platform | Architecture | Package |
+|----------|-------------|---------|
+| macOS | Apple Silicon (ARM64) | `@spec-ade/cli-darwin-arm64` |
+| Linux | x86_64 | `@spec-ade/cli-linux-x64` |
+| Linux | ARM64 | `@spec-ade/cli-linux-arm64` |
+| Windows | x86_64 | `@spec-ade/cli-win32-x64` |
+
+<Note>
+  Platform-specific binaries are installed via `optionalDependencies`. If you used `--no-optional` during install, the binary won't be available. Reinstall without that flag.
+</Note>
+
+## System requirements
+
+- **Node.js** >= 18 (for npm installation)
+- **Git** (for git integration features)
+- No Rust toolchain needed — the binary is pre-compiled with all dependencies statically linked
+
+## Verify installation
+
+```bash
+spec-ade --version
+```
+
+## Launch
+
+```bash
+spec-ade
+```
+
+This starts the backend server on `http://localhost:3100` and opens your browser automatically.
+
+## CLI arguments
+
+| Flag | Env Variable | Default | Description |
+|------|-------------|---------|-------------|
+| `-H`, `--host` | `SPEC_ADE_HOST` | `0.0.0.0` | Host to bind to |
+| `-p`, `--port` | `SPEC_ADE_PORT` | `3100` | Port to bind to |
+| `--no-open` | — | `false` | Don't open browser on start |
+| `--reset-auth` | — | `false` | Clear access key and session secret |
+
+Priority: CLI args > environment variables > defaults.
+
+### Examples
+
+```bash
+# Run on a custom port
+spec-ade --port 4000
+
+# Run without opening browser
+spec-ade --no-open
+
+# Bind to localhost only
+spec-ade --host 127.0.0.1
+
+# Reset authentication credentials
+spec-ade --reset-auth
+```
+
+## Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SPEC_ADE_HOST` | `0.0.0.0` | Host to bind the backend server |
+| `SPEC_ADE_PORT` | `3100` | Port for the backend server |
+| `VITE_API_BASE_URL` | same-origin | Base URL for frontend API calls |
+
+## Desktop app
+
+Spec ADE is also available as a native desktop app via Tauri. See [Desktop App](/features/desktop-app) for details on the Tauri wrapper and PWA support.
+
+## Next steps
+
+Once installed, follow the [Quickstart](/getting-started/quickstart) to open your first project.

@@ -1,0 +1,53 @@
+---
+title: Sessions
+description: Session lifecycle, CLI types, and tab management.
+---
+
+# Sessions
+
+A session is a chat or terminal instance connected to an AI agent. Each session belongs to a project and uses a specific CLI tool.
+
+## Creating a session
+
+Click **New Session** in the session tab bar. Each session gets:
+
+- A unique UUID
+- A CLI type (Auggie or Claude Code)
+- A title (auto-generated, double-click to rename)
+- A tab position (drag to reorder)
+
+## CLI types
+
+| Type | Mode | Detection | Visual |
+|------|------|-----------|--------|
+| **Auggie** | PTY | Bracketed paste mode (`\x1b[?2004h`) | ● dot indicator |
+| **Claude Code** | PTY | Bracketed paste mode | ◆ diamond indicator |
+| **ACP Agent** | ACP | WebSocket protocol | Custom per agent |
+
+Sessions without a `cliType` field default to Auggie for backward compatibility.
+
+## Session lifecycle
+
+```
+Created → Terminal spawned → Agent ready → Active → Idle/Closed
+```
+
+1. **Created** — `POST /api/projects/{id}/sessions` creates the session with a real UUID
+2. **Terminal spawned** — A PTY process starts with the selected CLI tool
+3. **Agent ready** — Detected via bracketed paste mode signal
+4. **Active** — User is chatting, agent is processing
+5. **Idle/Closed** — Session can be resumed or deleted
+
+## Tab management
+
+Session tabs support:
+- **Drag reorder** — rearrange tabs by dragging
+- **Double-click rename** — edit the session title inline
+- **Close** — hard delete via `DELETE /api/sessions/{id}`
+- **Per-CLI naming** — "Auggie 2", "Claude 3" auto-incremented
+
+## Persistence
+
+Sessions persist across server restarts. The backend merges Auggie CLI session data with in-memory metadata (title, tab order). Chat history is stored in `~/.config/spec-ade/acp-history/{session_id}.json`.
+
+Tab state is saved to `localStorage` with prefix `spec-ade:tabs:`, debounced at 300ms.

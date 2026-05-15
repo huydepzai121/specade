@@ -1,0 +1,64 @@
+---
+title: Dự án
+description: Cách Spec ADE quản lý project, file tree và state đa project.
+---
+
+# Dự án
+
+Một project trong Spec ADE là một thư mục trên filesystem. Khi bạn thêm project, Spec ADE index file tree, theo dõi trạng thái git và cung cấp workspace cho các phiên AI agent.
+
+## Thêm project
+
+Nhấn nút **+** trong sidebar và chọn thư mục. Spec ADE lưu metadata project:
+
+- **Path** (định danh duy nhất) — đường dẫn tuyệt đối trên filesystem
+- **Name** — lấy từ tên thư mục, có thể chỉnh sửa
+- **Icon** — icon project tùy chỉnh
+- **Sort order** — kéo để sắp xếp lại trong sidebar
+- **Created at / Last opened** — timestamp để sắp xếp
+
+## File tree
+
+Sidebar hiển thị file tree cho project đang hoạt động. Nó dùng crate `ignore` (giống ripgrep) để lọc theo gitignore, cộng thêm loại trừ cứng cho `node_modules` và `.git`.
+
+Tính năng:
+- Chỉ báo trạng thái git (modified, added, deleted) bên cạnh mỗi file
+- Nhấn để mở trong trình soạn thảo
+- Nhấn chuột phải cho menu ngữ cảnh (rename, delete, copy path)
+- Mobile: nhấn giữ (500ms) cho menu ngữ cảnh
+
+Đường dẫn file được cắt ngắn với `direction: rtl` để giữ tên file hiển thị khi đường dẫn dài.
+
+## State đa project
+
+Spec ADE hỗ trợ nhiều project đồng thời. State được phân theo project ID:
+
+- Session, terminal và tab file thuộc phạm vi project
+- Layout (sắp xếp pane) được lưu theo project
+- Chuyển project giữ nguyên state của tất cả project khác — terminal tiếp tục chạy, lịch sử chat được giữ lại
+
+Key đặc biệt:
+- `__global__` — cho terminal toàn cục không gắn với project nào
+- `__auggie__` — cho session Auggie CLI
+
+## Mô hình dữ liệu
+
+Toàn bộ dữ liệu project nằm trong `~/.config/spec-ade/settings.json`:
+
+```json
+{
+  "projects": [
+    {
+      "id": "uuid",
+      "path": "/Users/you/my-project",
+      "name": "my-project",
+      "icon": null,
+      "sortOrder": 0,
+      "createdAt": "2026-01-01T00:00:00Z",
+      "lastOpened": "2026-04-30T12:00:00Z"
+    }
+  ]
+}
+```
+
+Xóa project sẽ cascade: tất cả session và dữ liệu layout của nó bị xóa.

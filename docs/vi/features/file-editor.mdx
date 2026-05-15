@@ -1,0 +1,78 @@
+---
+title: Trình soạn thảo
+description: Editor CodeMirror 6 với syntax highlighting, chia pane và preview media.
+---
+
+# Trình soạn thảo
+
+Spec ADE bao gồm code editor xây dựng trên CodeMirror 6 với theme dark tùy chỉnh kiểu VS Code, rainbow bracket và indent guide.
+
+## Ngôn ngữ được hỗ trợ
+
+Editor tải hỗ trợ ngôn ngữ động cho:
+
+| Ngôn ngữ | Extension |
+|-----------|-----------|
+| JavaScript/TypeScript | `.js`, `.ts`, `.jsx`, `.tsx` |
+| HTML | `.html` |
+| CSS/LESS/SASS | `.css`, `.less`, `.scss` |
+| Python | `.py` |
+| Rust | `.rs` |
+| Go | `.go` |
+| Java | `.java` |
+| C/C++ | `.c`, `.cpp`, `.h` |
+| PHP | `.php` |
+| SQL | `.sql` |
+| JSON | `.json` |
+| YAML | `.yaml`, `.yml` |
+| XML | `.xml` |
+| Markdown | `.md` |
+| Vue | `.vue` |
+| Liquid | `.liquid` |
+
+## Phím tắt
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Chuyển xem/sửa | `⌘+K` | `Ctrl+K` |
+| Lưu | `⌘+S` | `Ctrl+S` |
+| Chia phải | `⌘+\` | `Ctrl+\` |
+| Chia xuống | `⌘+⇧+\` | `Ctrl+Shift+\` |
+
+## Tính năng editor
+
+- **Theme One Dark** với màu tùy chỉnh kiểu VS Code
+- **Rainbow bracket** cho cặp ngoặc khớp
+- **Indent guide** cho theo dõi thụt lề trực quan
+- **Số dòng** (bật/tắt được)
+- **Xuống dòng** (bật/tắt được)
+- **Khớp ngoặc** và tự đóng
+- **Autocomplete** với tùy chọn kích hoạt khi gõ
+- **Lint gutter** cho diagnostic inline
+- **Minimap** cho tổng quan code
+- **Tìm kiếm** với hỗ trợ regex (`Ctrl+F` / `⌘+F`)
+
+## Cài đặt editor
+
+Tất cả cài đặt editor có thể cấu hình trong Settings:
+
+| Cài đặt | Mặc định | Mô tả |
+|---------|----------|-------|
+| `lineNumbers` | `true` | Hiển thị số dòng |
+| `lineWrapping` | `false` | Xuống dòng tự động |
+| `bracketMatching` | `true` | Highlight ngoặc khớp |
+| `autocomplete` | `true` | Bật autocomplete |
+| `activateOnTyping` | `true` | Kích hoạt autocomplete khi gõ |
+| `closeBrackets` | `true` | Tự đóng ngoặc |
+| `lintGutter` | `true` | Hiển thị marker lint |
+| `indentGuides` | `true` | Hiển thị indent guide |
+| `highlightActiveLine` | `true` | Highlight dòng hiện tại |
+| `rainbowBrackets` | `true` | Tô màu cặp ngoặc lồng nhau |
+
+## Preview media
+
+File không phải text được hiển thị trong component preview media (`MediaPreview.vue`) xử lý hình ảnh, video và các loại media khác.
+
+## Trạng thái dirty
+
+File đã chỉnh sửa hiển thị chỉ báo dấu chấm trên tab. File tự lưu khi bạn chuyển tab.

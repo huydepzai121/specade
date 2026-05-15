@@ -1,0 +1,54 @@
+---
+title: Worktrees
+description: Git worktree cho công việc agent song song mà không xung đột branch.
+---
+
+# Worktrees
+
+Spec ADE tích hợp git worktree để mỗi agent có thể làm việc trên branch riêng của mình mà không ảnh hưởng đến các agent khác — hoặc branch chính của bạn.
+
+## Worktree là gì?
+
+Một git worktree là một thư mục làm việc riêng biệt được liên kết với cùng một repository. Mỗi worktree có branch, index và working tree riêng, nhưng chia sẻ cùng một kho lưu trữ object `.git`.
+
+```
+my-project/                    ← main worktree (your branch)
+├── .git/
+├── src/
+└── ...
+
+my-project-worktrees/
+├── oauth-refactor/            ← agent 1's worktree
+│   ├── src/auth/oauth.ts      (new file)
+│   └── src/auth.ts            (modified)
+├── test-coverage/             ← agent 2's worktree
+│   └── tests/auth.spec.ts     (new file)
+└── docs-update/               ← agent 3's worktree
+    └── README.md              (modified)
+```
+
+## Cách hoạt động trong Spec ADE
+
+1. **Mỗi Claw có worktree riêng** — khi một Claw khởi động, nó có thể hoạt động trong một worktree độc lập
+2. **Refactoring song song** — nhiều agent chỉnh sửa code đồng thời mà không có xung đột merge
+3. **Quản lý qua sidebar** — xem diff, review và merge các thay đổi worktree từ panel git
+4. **Một branch cho mỗi worktree** — mỗi worktree nằm trên branch riêng, hiển thị trong danh sách branch
+
+## Lợi ích
+
+- **Không ảnh hưởng branch chính** — agent không bao giờ chỉnh sửa trực tiếp branch đang làm việc của bạn
+- **Thực thi song song** — chạy 5 agent trên 5 task khác nhau cùng lúc
+- **Dễ review** — xem thay đổi của từng agent dưới dạng diff sạch so với main
+- **Merge an toàn** — review và merge branch của từng worktree khi sẵn sàng
+
+## Vòng đời worktree
+
+```
+Create → Agent works → Review diff → Merge branch → Clean up
+```
+
+Worktree được quản lý qua panel git trong sidebar. Bạn có thể:
+- Xem tất cả worktree đang hoạt động
+- Xem diff của từng worktree
+- Merge branch của một worktree vào main
+- Xóa một worktree khi hoàn thành

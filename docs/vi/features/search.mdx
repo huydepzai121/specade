@@ -1,0 +1,27 @@
+---
+title: Tìm kiếm
+description: Tìm kiếm nội dung file bằng ripgrep với điều hướng kết quả.
+---
+
+# Tìm kiếm
+
+Spec ADE cung cấp tìm kiếm nội dung file nhanh chạy bằng **ripgrep** với fallback grep cho hệ thống không có ripgrep.
+
+## Cách tìm kiếm
+
+Mở panel tìm kiếm từ sidebar hoặc dùng phím tắt. Nhập truy vấn và kết quả xuất hiện thời gian thực.
+
+## Tính năng tìm kiếm
+
+- **Hỗ trợ regex** — tìm kiếm với biểu thức chính quy
+- **Phân biệt hoa thường** — bật/tắt khớp phân biệt hoa thường
+- **Lọc file** — giới hạn tìm kiếm theo loại file hoặc đường dẫn
+- **Nhóm kết quả** — kết quả nhóm theo file với số dòng
+- **Nhấn để điều hướng** — nhấn bất kỳ kết quả nào để mở file tại dòng đó
+- **Dòng ngữ cảnh** — xem các dòng xung quanh cho mỗi kết quả khớp
+
+## Triển khai
+
+Backend sử dụng ripgrep (`rg`) cho tìm kiếm khi có sẵn, fallback sang grep. Kết quả được stream đến frontend để hiển thị phản hồi nhanh ngay cả trên codebase lớn.
+
+Tìm kiếm file tree sử dụng crate `ignore` cho khám phá file theo gitignore, với loại trừ cứng cho `node_modules` và `.git`.

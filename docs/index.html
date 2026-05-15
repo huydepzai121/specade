@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec ADE — Documentation</title>
+<link rel="icon" type="image/png" href="../assets/favicon-128x128.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var t=localStorage.getItem('spec-ade-theme');
+  if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';}
+  if(t==='light')document.documentElement.setAttribute('data-theme','light');
+})();
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+<style>
+:root{
+  --bg-0:#0A0A0F;--bg-1:#12111A;--bg-2:#1A1825;--bg-3:#222030;
+  --line:rgba(255,255,255,0.08);--line-strong:rgba(255,255,255,0.14);
+  --ink-0:#E8E6F0;--ink-1:#D0CDE0;--ink-2:#8B89A0;--ink-3:#5E5C72;
+  --violet-300:#A78BFA;--violet-400:#8B6FF0;--violet-500:#7C5BE6;--violet-600:#6841D6;--violet-900:#2A1A5C;
+  --accent-cyan:#67E8F9;--accent-lime:#BEF264;--accent-amber:#FBBF24;
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;
+  --font-sans:'Geist','Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'Geist Mono','JetBrains Mono',ui-monospace,monospace;
+  --sidebar-w:260px;--topbar-h:56px;
+}
+:root[data-theme="light"]{
+  --bg-0:#FAFAFE;--bg-1:#F3F2F8;--bg-2:#ECEAF4;--bg-3:#E2E0ED;
+  --line:rgba(0,0,0,0.08);--line-strong:rgba(0,0,0,0.14);
+  --ink-0:#1A1625;--ink-1:#2D2842;--ink-2:#5B5675;--ink-3:#8A85A0;
+  --violet-300:#6841D6;--violet-400:#5530B8;
+  --accent-cyan:#0891B2;--accent-lime:#65A30D;--accent-amber:#D97706;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-0);color:var(--ink-0);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh}
+a{color:var(--violet-300);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:var(--violet-500);color:#fff}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg-0)}::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:4px}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:rgba(10,10,15,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:40;display:flex;align-items:center;padding:0 24px;gap:12px}
+[data-theme="light"] .topbar{background:rgba(250,250,254,0.85)}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;letter-spacing:-0.02em;white-space:nowrap;flex-shrink:0}
+.topbar-logo .mark{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#8B6FF0,#5530B8);position:relative;box-shadow:0 0 16px rgba(124,91,230,0.4)}
+.topbar-logo .mark::after{content:'';position:absolute;inset:3px;border-radius:3px;background:var(--bg-0)}
+.topbar-logo .mark::before{content:'';position:absolute;inset:6px 6px auto auto;width:4px;height:4px;border-radius:50%;background:var(--violet-300);z-index:2}
+.topbar-logo a{color:var(--ink-0);text-decoration:none}
+.docs-badge{font-size:11px;color:var(--ink-2);background:var(--bg-2);padding:2px 8px;border-radius:4px;border:1px solid var(--line);margin-left:4px}
+.topbar-spacer{flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;color:var(--ink-2);font-size:13px;cursor:pointer;transition:border-color .2s;min-width:200px}
+.topbar-search:hover{border-color:var(--line-strong)}
+.topbar-search kbd{font-family:var(--font-sans);font-size:11px;background:var(--bg-3);padding:1px 6px;border-radius:4px;color:var(--ink-3);border:1px solid var(--line)}
+.topbar-link{color:var(--ink-2);font-size:13px;font-weight:500;padding:6px 10px;border-radius:6px;transition:color .2s;text-decoration:none;white-space:nowrap}
+.topbar-link:hover{color:var(--ink-0);text-decoration:none}
+.hamburger{display:none;background:none;border:none;color:var(--ink-1);font-size:20px;cursor:pointer;padding:4px 8px}
+.topbar-controls{display:flex;align-items:center;gap:4px}
+.lang-toggle{display:flex;align-items:center;gap:0;border-radius:999px;overflow:hidden;border:1px solid var(--line);font-size:11px;font-weight:600}
+.lang-toggle button{border:none;background:transparent;color:var(--ink-3);padding:4px 10px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;transition:all .2s;line-height:1}
+.lang-toggle button.active{background:rgba(124,91,230,0.15);color:var(--violet-300)}
+[data-theme="light"] .lang-toggle button.active{background:rgba(124,91,230,0.1);color:var(--violet-600)}
+.theme-toggle{border:none;background:transparent;color:var(--ink-2);cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:999px;transition:all .2s;font-size:16px;padding:0}
+.theme-toggle:hover{background:rgba(255,255,255,0.06);color:var(--ink-0)}
+[data-theme="light"] .theme-toggle:hover{background:rgba(0,0,0,0.04)}
+.theme-toggle svg{width:16px;height:16px;transition:transform .2s ease,opacity .2s ease}
+.topbar-link:focus-visible,.topbar-search:focus-visible,.lang-toggle button:focus-visible,.theme-toggle:focus-visible,.sidebar-link:focus-visible,.doc-card:focus-visible,.page-nav a:focus-visible{outline:2px solid var(--violet-300);outline-offset:2px;border-radius:6px}
+
+.layout{display:flex;padding-top:var(--topbar-h);min-height:100vh}
+.sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);overflow-y:auto;padding:16px 0;border-right:1px solid var(--line);background:var(--bg-0);z-index:30}
+.sidebar-group{margin-bottom:8px}
+.sidebar-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-3);padding:12px 20px 6px;user-select:none}
+.sidebar-link{display:flex;align-items:center;gap:8px;padding:6px 20px 6px 24px;font-size:13.5px;color:var(--ink-2);cursor:pointer;transition:all .15s;border-left:2px solid transparent;text-decoration:none}
+.sidebar-link:hover{color:var(--ink-0);background:rgba(255,255,255,0.03);text-decoration:none}
+[data-theme="light"] .sidebar-link:hover{background:rgba(0,0,0,0.03)}
+.sidebar-link.active{color:var(--violet-300);background:rgba(124,91,230,0.06);border-left-color:var(--violet-400)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:29}
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0}
+.content-wrap{max-width:780px;margin:0 auto;padding:32px 40px 80px}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);margin-bottom:8px}
+.breadcrumb span{color:var(--ink-2)}
+.prose{font-size:15px;line-height:1.7;color:var(--ink-1)}
+.prose h1{font-size:32px;font-weight:700;letter-spacing:-0.02em;color:var(--ink-0);margin:0 0 8px;line-height:1.2}
+.prose .page-desc{font-size:16px;color:var(--ink-2);margin-bottom:32px;line-height:1.5}
+.prose h2{font-size:22px;font-weight:600;letter-spacing:-0.01em;color:var(--ink-0);margin:40px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+.prose h2:first-of-type{border-top:none;padding-top:0}
+.prose h3{font-size:17px;font-weight:600;color:var(--ink-0);margin:32px 0 12px}
+.prose h4{font-size:15px;font-weight:600;color:var(--ink-0);margin:24px 0 8px}
+.prose p{margin:0 0 16px}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:24px}
+.prose li{margin-bottom:6px}
+.prose li>ul,.prose li>ol{margin-top:6px;margin-bottom:0}
+.prose strong{color:var(--ink-0);font-weight:600}
+.prose code{font-family:var(--font-mono);font-size:13px;background:var(--bg-2);padding:2px 6px;border-radius:4px;color:var(--violet-300);border:1px solid var(--line)}
+.prose pre{margin:0 0 20px;border-radius:var(--radius-md);overflow-x:auto;border:1px solid var(--line)}
+.prose pre code{display:block;padding:16px 20px;background:var(--bg-1);border:none;color:var(--ink-1);font-size:13px;line-height:1.6}
+[data-theme="light"] .prose pre code{background:var(--bg-2);color:var(--ink-0)}
+[data-theme="light"] .prose pre code .token.comment{color:#6a737d}
+[data-theme="light"] .prose pre code .token.keyword{color:#d73a49}
+[data-theme="light"] .prose pre code .token.string{color:#032f62}
+[data-theme="light"] .prose pre code .token.function{color:#6f42c1}
+[data-theme="light"] .prose pre code .token.number{color:#005cc5}
+[data-theme="light"] .prose pre code .token.operator{color:#d73a49}
+[data-theme="light"] .prose pre code .token.punctuation{color:#24292e}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:14px}
+.prose th{text-align:left;padding:10px 14px;background:var(--bg-2);border:1px solid var(--line);font-weight:600;color:var(--ink-0);font-size:13px}
+.prose td{padding:10px 14px;border:1px solid var(--line);color:var(--ink-1)}
+.prose blockquote{margin:0 0 20px;padding:12px 20px;border-left:3px solid var(--violet-400);background:rgba(124,91,230,0.05);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.prose img{max-width:100%;border-radius:var(--radius-md)}
+.prose hr{border:none;border-top:1px solid var(--line);margin:32px 0}
+.callout{margin:0 0 20px;padding:14px 18px;border-radius:var(--radius-md);border-left:3px solid;display:flex;gap:10px;font-size:14px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.callout-body{flex:1}.callout-body p{margin:0}.callout-body p+p{margin-top:8px}
+.callout.warning{border-color:var(--accent-amber);background:rgba(251,191,36,0.05)}
+.callout.tip{border-color:var(--accent-cyan);background:rgba(103,232,249,0.05)}
+.callout.note{border-color:var(--violet-400);background:rgba(124,91,230,0.05)}
+.callout.info{border-color:var(--accent-cyan);background:rgba(103,232,249,0.05)}
+.card-grid{display:grid;gap:12px;margin:0 0 24px}
+.card-grid[data-cols="2"]{grid-template-columns:repeat(2,1fr)}
+.card-grid[data-cols="3"]{grid-template-columns:repeat(3,1fr)}
+.doc-card{display:block;padding:18px;background:var(--bg-1);border:1px solid var(--line);border-radius:var(--radius-md);transition:border-color .2s;text-decoration:none}
+.doc-card:hover{border-color:var(--violet-400);text-decoration:none}
+.doc-card h4{font-size:14px;font-weight:600;color:var(--ink-0);margin:0 0 4px}
+.doc-card p{font-size:13px;color:var(--ink-2);margin:0;line-height:1.4}
+.page-nav{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:24px;border-top:1px solid var(--line)}
+.page-nav a{display:flex;flex-direction:column;gap:4px;padding:14px 18px;background:var(--bg-1);border:1px solid var(--line);border-radius:var(--radius-md);transition:border-color .2s;text-decoration:none;min-width:0;max-width:50%}
+.page-nav a:hover{border-color:var(--violet-400);text-decoration:none}
+.page-nav .nav-label{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.04em}
+.page-nav .nav-title{font-size:14px;color:var(--ink-0);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page-nav .next{margin-left:auto;text-align:right}
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding-top:min(20vh,160px)}
+[data-theme="light"] .search-overlay{background:rgba(0,0,0,0.3)}
+.search-modal{width:min(560px,90vw);background:var(--bg-1);border:1px solid var(--line-strong);border-radius:var(--radius-lg);box-shadow:0 20px 60px rgba(0,0,0,0.5);overflow:hidden}
+[data-theme="light"] .search-modal{box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.search-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.search-input-wrap svg{width:18px;height:18px;color:var(--ink-3);flex-shrink:0}
+.search-input{flex:1;background:none;border:none;color:var(--ink-0);font-size:15px;font-family:var(--font-sans);outline:none}
+.search-input::placeholder{color:var(--ink-3)}
+.search-results{max-height:360px;overflow-y:auto;padding:8px}
+.search-result{display:block;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:background .1s;text-decoration:none}
+.search-result:hover,.search-result.focused{background:rgba(124,91,230,0.08);text-decoration:none}
+.search-result-title{font-size:14px;font-weight:500;color:var(--ink-0)}
+.search-result-desc{font-size:12px;color:var(--ink-2);margin-top:2px}
+.search-result-group{font-size:11px;color:var(--ink-3);margin-top:2px}
+.search-empty{padding:24px;text-align:center;color:var(--ink-3);font-size:14px}
+.search-hint{padding:8px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3);display:flex;gap:12px}
+.search-hint kbd{font-family:var(--font-mono);background:var(--bg-3);padding:1px 5px;border-radius:3px;font-size:10px}
+.fallback-banner{margin:0 0 24px;padding:10px 16px;background:rgba(124,91,230,0.06);border:1px solid rgba(124,91,230,0.15);border-radius:var(--radius-sm);font-size:13px;color:var(--ink-2);text-align:center}
+.loading{display:flex;align-items:center;justify-content:center;padding:80px 0;color:var(--ink-3)}
+.loading-dot{width:6px;height:6px;border-radius:50%;background:var(--violet-400);animation:ldot .8s ease-in-out infinite;margin:0 3px}
+.loading-dot:nth-child(2){animation-delay:.15s}
+.loading-dot:nth-child(3){animation-delay:.3s}
+@keyframes ldot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.not-found{text-align:center;padding:80px 0}
+.not-found h2{font-size:24px;color:var(--ink-0);margin-bottom:8px}
+.not-found p{color:var(--ink-2)}
+.docs-footer{margin-top:60px;padding:20px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+.docs-footer a{color:var(--ink-2)}
+@media(max-width:768px){
+  .hamburger{display:block}
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:280px}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .content-wrap{padding:24px 20px 60px}
+  .topbar-search{min-width:0;flex:1}
+  .topbar-link{display:none}
+  .topbar-controls{gap:2px}
+  .card-grid[data-cols="2"],.card-grid[data-cols="3"]{grid-template-columns:1fr}
+  .page-nav{flex-direction:column}
+  .page-nav a{max-width:100%}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useCallback,useRef,createContext,useContext,useMemo}=React;
+
+/* ── VI strings inlined as default ── */
+const VI_STRINGS={"nav.getting_started":"Bắt đầu","nav.workspace":"Không gian làm việc","nav.agents":"Agent","nav.version_control":"Quản lý phiên bản","nav.editor_terminal":"Editor & Terminal","nav.git_search":"Git & Tìm kiếm","nav.system":"Hệ thống","nav.deployment":"Triển khai","nav.configuration":"Cấu hình","search.placeholder":"Tìm kiếm tài liệu...","search.empty":"Không tìm thấy kết quả","search.hint":"Nhập để tìm kiếm trong tài liệu","search.navigate":"Di chuyển","search.open":"Mở","search.close":"Đóng","page_nav.previous":"← Trước","page_nav.next":"Tiếp →","footer.copyright":"© 2026 spec-ade","footer.home":"← Về trang chủ","topbar.discord":"Discord","topbar.home":"← Trang chủ","not_found.title":"Không tìm thấy trang","not_found.text":"Trang này không tồn tại.","fallback.banner":"🌐 This page is not yet available in Vietnamese / Trang này chưa được dịch sang tiếng Việt"};
+
+/* ── Navigation structure ── */
+const NAV=[
+  {titleKey:"nav.getting_started",pages:[
+    {slug:"getting-started/introduction",title:"Introduction",titleVi:"Giới thiệu"},
+    {slug:"getting-started/installation",title:"Installation",titleVi:"Cài đặt"},
+    {slug:"getting-started/quickstart",title:"Quickstart",titleVi:"Bắt đầu nhanh"}
+  ]},
+  {titleKey:"nav.workspace",pages:[
+    {slug:"core-concepts/projects",title:"Projects",titleVi:"Dự án"},
+    {slug:"core-concepts/sessions",title:"Sessions",titleVi:"Phiên làm việc"},
+    {slug:"core-concepts/pane-system",title:"Pane System",titleVi:"Hệ thống Pane"}
+  ]},
+  {titleKey:"nav.agents",pages:[
+    {slug:"core-concepts/claws",title:"Claws",titleVi:"Claws"},
+    {slug:"core-concepts/skills",title:"Skills",titleVi:"Skills"},
+    {slug:"core-concepts/acp-agents",title:"ACP Agents",titleVi:"ACP Agents"}
+  ]},
+  {titleKey:"nav.version_control",pages:[
+    {slug:"core-concepts/worktrees",title:"Worktrees",titleVi:"Worktrees"}
+  ]},
+  {titleKey:"nav.editor_terminal",pages:[
+    {slug:"features/chat-interface",title:"Chat Interface",titleVi:"Giao diện Chat"},
+    {slug:"features/terminal",title:"Terminal",titleVi:"Terminal"},
+    {slug:"features/file-editor",title:"File Editor",titleVi:"Trình soạn thảo"}
+  ]},
+  {titleKey:"nav.git_search",pages:[
+    {slug:"features/git-integration",title:"Git Integration",titleVi:"Tích hợp Git"},
+    {slug:"features/search",title:"Search",titleVi:"Tìm kiếm"}
+  ]},
+  {titleKey:"nav.system",pages:[
+    {slug:"features/keyboard-shortcuts",title:"Keyboard Shortcuts",titleVi:"Phím tắt"},
+    {slug:"features/process-monitor",title:"Process Monitor",titleVi:"Giám sát tiến trình"},
+    {slug:"features/desktop-app",title:"Desktop App",titleVi:"Ứng dụng Desktop"}
+  ]},
+  {titleKey:"nav.deployment",pages:[
+    {slug:"guides/self-hosting",title:"Self-Hosting",titleVi:"Tự triển khai"},
+    {slug:"guides/licensing",title:"Licensing",titleVi:"Giấy phép"}
+  ]},
+  {titleKey:"nav.configuration",pages:[
+    {slug:"guides/custom-agents",title:"Custom Agents",titleVi:"Agent tùy chỉnh"},
+    {slug:"guides/settings",title:"Settings",titleVi:"Cài đặt"}
+  ]}
+];
+const ALL_PAGES=NAV.flatMap(g=>g.pages);
+
+/* ── Locale Context ── */
+const LocaleContext=createContext({locale:'vi',t:k=>k,setLocale:()=>{}});
+function LocaleProvider({children}){
+  const[locale,setLocaleState]=useState(()=>{
+    const saved=localStorage.getItem('spec-ade-locale');
+    if(saved)return saved;
+    return(navigator.language||'').startsWith('en')?'en':'vi';
+  });
+  const[strings,setStrings]=useState(VI_STRINGS);
+  const setLocale=useCallback(l=>{
+    setLocaleState(l);localStorage.setItem('spec-ade-locale',l);
+    document.documentElement.setAttribute('lang',l);
+  },[]);
+  useEffect(()=>{
+    if(!localStorage.getItem('spec-ade-locale'))localStorage.setItem('spec-ade-locale',locale);
+    document.documentElement.setAttribute('lang',locale);
+    if(locale==='vi'){setStrings(VI_STRINGS);return;}
+    fetch('locales/'+locale+'.json').then(r=>r.ok?r.json():{}).then(setStrings).catch(()=>setStrings({}));
+  },[locale]);
+  const t=useCallback(k=>strings[k]||VI_STRINGS[k]||k,[strings]);
+  return <LocaleContext.Provider value={{locale,t,setLocale}}>{children}</LocaleContext.Provider>;
+}
+function useLocale(){return useContext(LocaleContext);}
+
+/* ── Theme Toggle ── */
+function ThemeToggle(){
+  const[dark,setDark]=useState(()=>document.documentElement.getAttribute('data-theme')!=='light');
+  const toggle=()=>{const next=dark?'light':'dark';
+    if(next==='light')document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('spec-ade-theme',next);setDark(next==='dark');};
+  return <button className="theme-toggle" onClick={toggle} aria-label={dark?'Switch to light mode':'Switch to dark mode'} title={dark?'Light mode':'Dark mode'}>
+    {dark?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    :<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>}
+  </button>;
+}
+
+/* ── Lang Toggle ── */
+function LangToggle(){
+  const{locale,setLocale}=useLocale();
+  return <div className="lang-toggle" role="radiogroup" aria-label="Language">
+    <button className={locale==='vi'?'active':''} role="radio" aria-checked={locale==='vi'} onClick={()=>setLocale('vi')}>VI</button>
+    <button className={locale==='en'?'active':''} role="radio" aria-checked={locale==='en'} onClick={()=>setLocale('en')}>EN</button>
+  </div>;
+}
+
+/* ── MDX preprocessor ── */
+function preprocessMdx(raw){
+  let md=raw.replace(/^---[\s\S]*?---\n*/,'');
+  md=md.replace(/<(Note|Warning|Tip|Info)>([\s\S]*?)<\/\1>/gi,(_,type,body)=>{
+    const t=type.toLowerCase();const icons={note:'📝',warning:'⚠️',tip:'💡',info:'ℹ️'};
+    return '<div class="callout '+t+'"><span class="callout-icon">'+icons[t]+'</span><div class="callout-body">'+body.trim()+'</div></div>';
+  });
+  md=md.replace(/<CardGroup\s+cols=\{(\d)\}>([\s\S]*?)<\/CardGroup>/gi,(_,cols,inner)=>{
+    const cards=[];inner.replace(/<Card\s+title="([^"]*)"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/Card>/gi,(_,title,href,desc)=>{
+      cards.push('<a class="doc-card" href="#'+href+'"><h4>'+title+'</h4><p>'+desc.trim()+'</p></a>');
+    });
+    return '<div class="card-grid" data-cols="'+cols+'">'+cards.join('')+'</div>';
+  });
+  return md;
+}
+
+/* ── Search Modal ── */
+function SearchModal({open,onClose}){
+  const{locale,t}=useLocale();
+  const[query,setQuery]=useState('');
+  const[results,setResults]=useState([]);
+  const[index,setIndex]=useState([]);
+  const[focused,setFocused]=useState(0);
+  const inputRef=useRef(null);
+  useEffect(()=>{
+    const file=locale==='vi'?'search-index-vi.json':'search-index-en.json';
+    fetch(file).then(r=>r.ok?r.json():[]).then(setIndex)
+      .catch(()=>fetch('search-index-en.json').then(r=>r.json()).then(setIndex).catch(()=>setIndex([])));
+  },[locale]);
+  useEffect(()=>{if(open&&inputRef.current){inputRef.current.focus();setQuery('');setFocused(0);}},[open]);
+  useEffect(()=>{
+    if(!query.trim()){setResults([]);return;}
+    const q=query.toLowerCase();
+    setResults(index.filter(i=>(i.title+' '+i.description+' '+(i.content||'')).toLowerCase().includes(q)).slice(0,8));
+    setFocused(0);
+  },[query,index]);
+  const go=slug=>{window.location.hash='/'+slug;onClose();};
+  const onKey=e=>{
+    if(e.key==='ArrowDown'){e.preventDefault();setFocused(f=>Math.min(f+1,results.length-1));}
+    if(e.key==='ArrowUp'){e.preventDefault();setFocused(f=>Math.max(f-1,0));}
+    if(e.key==='Enter'&&results[focused]){go(results[focused].slug);}
+    if(e.key==='Escape')onClose();
+  };
+  if(!open)return null;
+  return <div className="search-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+    <div className="search-modal" role="dialog" aria-label="Search">
+      <div className="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input ref={inputRef} className="search-input" placeholder={t('search.placeholder')} value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={onKey}/>
+      </div>
+      <div className="search-results">
+        {query&&!results.length&&<div className="search-empty">{t('search.empty')}</div>}
+        {results.map((r,i)=><a key={r.slug} className={'search-result'+(i===focused?' focused':'')} href={'#/'+r.slug} onClick={e=>{e.preventDefault();go(r.slug);}} onMouseEnter={()=>setFocused(i)}>
+          <div className="search-result-title">{r.title}</div>
+          <div className="search-result-desc">{r.description}</div>
+          <div className="search-result-group">{r.group}</div>
+        </a>)}
+      </div>
+      <div className="search-hint"><span><kbd>↑↓</kbd> {t('search.navigate')}</span><span><kbd>↵</kbd> {t('search.open')}</span><span><kbd>esc</kbd> {t('search.close')}</span></div>
+    </div>
+  </div>;
+}
+
+/* ── Sidebar ── */
+function Sidebar({currentSlug,sidebarOpen,onClose}){
+  const{locale,t}=useLocale();
+  return <>
+    <div className={'sidebar-overlay'+(sidebarOpen?' open':'')} onClick={onClose}/>
+    <nav className={'sidebar'+(sidebarOpen?' open':'')} aria-label="Documentation navigation">
+      {NAV.map(g=><div key={g.titleKey} className="sidebar-group">
+        <div className="sidebar-group-title">{t(g.titleKey)}</div>
+        {g.pages.map(p=><a key={p.slug} className={'sidebar-link'+(currentSlug===p.slug?' active':'')} href={'#/'+p.slug} onClick={onClose}>
+          {locale==='vi'?p.titleVi:p.title}
+        </a>)}
+      </div>)}
+    </nav>
+  </>;
+}
+
+/* ── Doc Content ── */
+function DocContent({slug}){
+  const{locale,t}=useLocale();
+  const[html,setHtml]=useState('');
+  const[loading,setLoading]=useState(true);
+  const[fallback,setFallback]=useState(false);
+  const[meta,setMeta]=useState({title:'',description:''});
+  const contentRef=useRef(null);
+
+  useEffect(()=>{
+    let cancelled=false;
+    setLoading(true);setFallback(false);
+    const fetchDoc=async()=>{
+      let raw=null,isFallback=false;
+      if(locale==='vi'){
+        try{const r=await fetch('vi/'+slug+'.mdx');if(r.ok)raw=await r.text();}catch(e){}
+        if(!raw){isFallback=true;try{const r=await fetch(slug+'.mdx');if(r.ok)raw=await r.text();}catch(e){}}
+      }else{
+        try{const r=await fetch(slug+'.mdx');if(r.ok)raw=await r.text();}catch(e){}
+      }
+      if(cancelled)return;
+      if(!raw){setHtml('');setLoading(false);setMeta({title:'',description:''});return;}
+      const fm=raw.match(/^---\n([\s\S]*?)\n---/);
+      let title='',desc='';
+      if(fm){fm[1].split('\n').forEach(l=>{const[k,...v]=l.split(':');const key=k.trim();const val=v.join(':').trim().replace(/^["']|["']$/g,'');if(key==='title')title=val;if(key==='description')desc=val;});}
+      setMeta({title,description:desc});
+      const processed=preprocessMdx(raw);
+      const rendered=marked.parse(processed);
+      setHtml(rendered);setFallback(isFallback);setLoading(false);
+    };
+    fetchDoc();
+    return()=>{cancelled=true;};
+  },[slug,locale]);
+
+  useEffect(()=>{
+    if(!contentRef.current||loading)return;
+    contentRef.current.querySelectorAll('pre code').forEach(el=>{Prism.highlightElement(el);});
+    contentRef.current.querySelectorAll('a[href^="#/"]').forEach(a=>{
+      a.addEventListener('click',e=>{e.preventDefault();window.location.hash=a.getAttribute('href').slice(1);});
+    });
+  },[html,loading]);
+
+  if(loading)return <div className="loading"><div className="loading-dot"/><div className="loading-dot"/><div className="loading-dot"/></div>;
+
+  const pageIdx=ALL_PAGES.findIndex(p=>p.slug===slug);
+  const prev=pageIdx>0?ALL_PAGES[pageIdx-1]:null;
+  const next=pageIdx<ALL_PAGES.length-1?ALL_PAGES[pageIdx+1]:null;
+  const parts=slug.split('/');
+  const group=NAV.find(g=>g.pages.some(p=>p.slug===slug));
+
+  if(!html)return <div className="not-found"><h2>{t('not_found.title')}</h2><p>{t('not_found.text')}</p></div>;
+
+  return <div className="content-wrap">
+    {group&&<div className="breadcrumb">{t(group.titleKey)} <span>›</span> <span>{locale==='vi'?(ALL_PAGES.find(p=>p.slug===slug)||{}).titleVi||meta.title:meta.title}</span></div>}
+    {fallback&&<div className="fallback-banner">{t('fallback.banner')}</div>}
+    <article className="prose" ref={contentRef} dangerouslySetInnerHTML={{__html:html}}/>
+    <div className="page-nav">
+      {prev?<a href={'#/'+prev.slug}><span className="nav-label">{t('page_nav.previous')}</span><span className="nav-title">{locale==='vi'?prev.titleVi:prev.title}</span></a>:<span/>}
+      {next&&<a href={'#/'+next.slug} className="next"><span className="nav-label">{t('page_nav.next')}</span><span className="nav-title">{locale==='vi'?next.titleVi:next.title}</span></a>}
+    </div>
+    <footer className="docs-footer">
+      <span>{t('footer.copyright')}</span>
+      <a href="../">{t('footer.home')}</a>
+    </footer>
+  </div>;
+}
+
+/* ── App ── */
+function App(){
+  const{t}=useLocale();
+  const[slug,setSlug]=useState(()=>{const h=window.location.hash.slice(2);return h||'index';});
+  const[searchOpen,setSearchOpen]=useState(false);
+  const[sidebarOpen,setSidebarOpen]=useState(false);
+
+  useEffect(()=>{
+    const onHash=()=>{const h=window.location.hash.slice(2)||'index';setSlug(h);setSidebarOpen(false);window.scrollTo(0,0);};
+    window.addEventListener('hashchange',onHash);
+    return()=>window.removeEventListener('hashchange',onHash);
+  },[]);
+
+  useEffect(()=>{
+    const onKey=e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();setSearchOpen(o=>!o);}};
+    window.addEventListener('keydown',onKey);
+    return()=>window.removeEventListener('keydown',onKey);
+  },[]);
+
+  return <>
+    <header className="topbar">
+      <button className="hamburger" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Toggle sidebar">☰</button>
+      <div className="topbar-logo"><img src="../assets/favicon-128x128.png" alt="Spec ADE" style={{width:20,height:20,borderRadius:5}}/><a href="#">Spec ADE</a><span className="docs-badge">Docs</span></div>
+      <div className="topbar-spacer"/>
+      <button className="topbar-search" onClick={()=>setSearchOpen(true)} aria-label="Search documentation">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        {t('search.placeholder')} <kbd>⌘K</kbd>
+      </button>
+      <div className="topbar-controls">
+        <LangToggle/>
+        <ThemeToggle/>
+      </div>
+      <a className="topbar-link" href="../">{t('topbar.home')}</a>
+    </header>
+    <Sidebar currentSlug={slug} sidebarOpen={sidebarOpen} onClose={()=>setSidebarOpen(false)}/>
+    <div className="layout"><div className="main"><DocContent slug={slug}/></div></div>
+    <SearchModal open={searchOpen} onClose={()=>setSearchOpen(false)}/>
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<LocaleProvider><App/></LocaleProvider>);
+</script>
+</body>
+</html>

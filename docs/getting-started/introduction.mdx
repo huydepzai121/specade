@@ -1,0 +1,73 @@
+---
+title: Introduction
+description: What is Spec ADE and why it exists.
+---
+
+# What is Spec ADE?
+
+Spec ADE is a full-stack GUI application for AI coding assistants. It provides a unified workspace where you can:
+
+- **Chat with AI agents** via WebSocket with real-time streaming and tool call visualization
+- **Run integrated terminals** with full PTY emulation (xterm.js)
+- **Browse and edit files** with CodeMirror 6 and syntax highlighting for 15+ languages
+- **Manage git** with staging, commits, branches, merge editor, and diff viewer
+- **Spawn autonomous agents** (Claws) that run skills on schedules with configurable permissions
+
+## Supported AI tools
+
+Spec ADE works with multiple AI coding assistants:
+
+| Tool | Mode | Description |
+|------|------|-------------|
+| **Auggie CLI** | PTY | Augment's CLI agent, runs in terminal |
+| **Claude Code** | PTY | Anthropic's CLI agent, runs in terminal |
+| **ACP Agents** | ACP | Any agent implementing the Agent Client Protocol |
+
+Each session can use a different CLI tool. You can run Auggie in one tab and Claude Code in another, against the same project.
+
+## Architecture at a glance
+
+```
+┌─────────────────────────────────────────────┐
+│              Spec ADE Desktop               │
+│           (Tauri v2 / Browser / PWA)        │
+├─────────────────────────────────────────────┤
+│         Vue 3 + Quasar v2 Frontend          │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌───────────┐  │
+│  │ Chat │ │ Term │ │ Edit │ │ Git Panel │  │
+│  └──────┘ └──────┘ └──────┘ └───────────┘  │
+├─────────────────────────────────────────────┤
+│     REST API  │  WebSocket  │  SSE          │
+├─────────────────────────────────────────────┤
+│          Rust + Axum Backend                │
+│  ┌─────┐ ┌──────┐ ┌──────┐ ┌───────────┐  │
+│  │ PTY │ │ Git2 │ │ ACP  │ │ Settings  │  │
+│  └─────┘ └──────┘ └──────┘ └───────────┘  │
+└─────────────────────────────────────────────┘
+```
+
+- **Frontend** communicates via REST (CRUD), WebSocket (terminal/chat I/O), and SSE (git watch events)
+- **Backend** is a single Rust binary that embeds the SPA via `memory-serve` — no separate web server needed
+- **Storage** lives in `~/.config/spec-ade/settings.json` — all state managed through the backend API
+
+## Key concepts
+
+Before diving in, here are the terms you'll encounter throughout the docs:
+
+- **Project** — A folder on your filesystem that Spec ADE manages. Has its own file tree, sessions, and layout.
+- **Session** — A chat/terminal instance connected to an AI agent. Each session belongs to a project.
+- **Claw** — An autonomous agent instance. Claws run skills on schedules, with configurable permission modes.
+- **Skill** — A packaged prompt + tooling configuration. Reusable across claws and projects.
+- **Worktree** — A git worktree assigned to an agent, enabling parallel work without branch conflicts.
+- **Pane** — A UI panel in the workspace. Panes can be split, resized, and arranged in a tree layout.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Install Spec ADE" icon="download" href="/getting-started/installation">
+    Get up and running on macOS, Linux, or Windows.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/getting-started/quickstart">
+    Your first project and agent session in 5 minutes.
+  </Card>
+</CardGroup>

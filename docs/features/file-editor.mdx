@@ -1,0 +1,78 @@
+---
+title: File Editor
+description: CodeMirror 6 editor with syntax highlighting, split panes, and media preview.
+---
+
+# File Editor
+
+Spec ADE includes a code editor built on CodeMirror 6 with a custom VS Code-inspired dark theme, rainbow brackets, and indent guides.
+
+## Supported languages
+
+The editor dynamically loads language support for:
+
+| Language | Extension |
+|----------|-----------|
+| JavaScript/TypeScript | `.js`, `.ts`, `.jsx`, `.tsx` |
+| HTML | `.html` |
+| CSS/LESS/SASS | `.css`, `.less`, `.scss` |
+| Python | `.py` |
+| Rust | `.rs` |
+| Go | `.go` |
+| Java | `.java` |
+| C/C++ | `.c`, `.cpp`, `.h` |
+| PHP | `.php` |
+| SQL | `.sql` |
+| JSON | `.json` |
+| YAML | `.yaml`, `.yml` |
+| XML | `.xml` |
+| Markdown | `.md` |
+| Vue | `.vue` |
+| Liquid | `.liquid` |
+
+## Keyboard shortcuts
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Toggle view/edit | `⌘+K` | `Ctrl+K` |
+| Save | `⌘+S` | `Ctrl+S` |
+| Split right | `⌘+\` | `Ctrl+\` |
+| Split down | `⌘+⇧+\` | `Ctrl+Shift+\` |
+
+## Editor features
+
+- **One Dark theme** with custom VS Code-inspired colors
+- **Rainbow brackets** for matching bracket pairs
+- **Indent guides** for visual indentation tracking
+- **Line numbers** (toggleable)
+- **Line wrapping** (toggleable)
+- **Bracket matching** and auto-close
+- **Autocomplete** with activate-on-typing option
+- **Lint gutter** for inline diagnostics
+- **Minimap** for code overview
+- **Search** with regex support (`Ctrl+F` / `⌘+F`)
+
+## Editor settings
+
+All editor settings are configurable in Settings:
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `lineNumbers` | `true` | Show line numbers |
+| `lineWrapping` | `false` | Wrap long lines |
+| `bracketMatching` | `true` | Highlight matching brackets |
+| `autocomplete` | `true` | Enable autocomplete |
+| `activateOnTyping` | `true` | Trigger autocomplete while typing |
+| `closeBrackets` | `true` | Auto-close brackets |
+| `lintGutter` | `true` | Show lint markers |
+| `indentGuides` | `true` | Show indent guides |
+| `highlightActiveLine` | `true` | Highlight current line |
+| `rainbowBrackets` | `true` | Color-code bracket pairs |
+
+## Media preview
+
+Non-text files are displayed in a media preview component (`MediaPreview.vue`) that handles images, videos, and other media types.
+
+## Dirty state
+
+Modified files show a dot indicator on their tab. Files auto-save when you switch tabs.

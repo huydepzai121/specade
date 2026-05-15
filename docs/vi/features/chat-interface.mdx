@@ -1,0 +1,60 @@
+---
+title: Giao diện Chat
+description: Chat qua WebSocket với streaming, tool call và lịch sử tin nhắn.
+---
+
+# Giao diện Chat
+
+Giao diện chat là cách chính để tương tác với AI agent trong Spec ADE. Nó cung cấp phản hồi streaming thời gian thực với hiển thị tool call.
+
+## Cách hoạt động
+
+Giao tiếp qua kết nối WebSocket:
+
+```
+Browser ←→ WebSocket ←→ Axum Backend ←→ PTY/ACP Agent
+```
+
+- **Input**: Tin nhắn được gửi dưới dạng event `submit` (nội dung + Enter)
+- **Output**: Phản hồi agent stream về dưới dạng event `output`
+- **Tool**: Mỗi tool call được hiển thị inline với chỉ báo trạng thái
+
+## Hiển thị tool call
+
+Khi agent gọi tool (Read, Glob, Grep, Bash, v.v.), bạn thấy mỗi lệnh gọi thời gian thực:
+
+```
+✓ Read index.html
+✓ Glob **/*.ts
+✓ Bash npm test
+```
+
+Tool call được nhóm với tóm tắt: "✓ 3 tool calls". Mở rộng để xem từng lệnh gọi và kết quả.
+
+## Loại tin nhắn
+
+| Loại | Mô tả |
+|------|-------|
+| **User message** | Văn bản input của bạn |
+| **Agent message** | Phản hồi AI với tool call tùy chọn |
+| **Thought** | Suy luận nội bộ của agent (chế độ ACP) |
+| **Plan** | Kế hoạch thực thi của agent (chế độ ACP) |
+| **Error** | Thông báo lỗi từ agent hoặc hệ thống |
+
+## Streaming
+
+Phản hồi stream từng token. Chat tự cuộn theo nội dung mới. Bạn có thể cuộn lên để xem lịch sử — tự cuộn tạm dừng cho đến khi bạn cuộn xuống cuối.
+
+## Hiển thị chat
+
+Hiển thị chat được bật/tắt theo loại CLI và lưu vào `localStorage`:
+- `spec-ade:chat-hidden:auggie`
+- `spec-ade:chat-hidden:claude`
+
+## Render Markdown
+
+Phản hồi agent được render dưới dạng Markdown với:
+- **Syntax highlighting** qua highlight.js
+- **Math** qua KaTeX
+- **Diagram** qua Mermaid
+- **Task list**, footnote và GitHub-style alert

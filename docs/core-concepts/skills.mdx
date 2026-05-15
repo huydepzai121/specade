@@ -1,0 +1,81 @@
+---
+title: Skills
+description: Reusable agent skills — discovery, packaging, and sharing.
+---
+
+# Skills
+
+A Skill is a packaged prompt + tooling configuration that you can attach to any Claw. Skills are discovered automatically from your workspace and user home directory.
+
+## Discovery locations
+
+Spec ADE scans 8 directories for skills, in priority order:
+
+### Workspace (higher priority)
+1. `.augment/skills/*/SKILL.md`
+2. `.augment/skill/*/SKILL.md`
+3. `.claude/skills/*/SKILL.md`
+4. `.claude/skill/*/SKILL.md`
+
+### User home (lower priority)
+5. `~/.augment/skills/*/SKILL.md`
+6. `~/.augment/skill/*/SKILL.md`
+7. `~/.claude/skills/*/SKILL.md`
+8. `~/.claude/skill/*/SKILL.md`
+
+Workspace skills take precedence over user-level skills with the same name.
+
+## SKILL.md format
+
+Each skill is a directory containing a `SKILL.md` file with YAML frontmatter:
+
+```markdown
+---
+description: Review pull requests for code quality and security issues
+license: MIT
+compatibility: auggie, claude
+allowedTools: Read, Glob, Grep, Bash
+---
+
+You are a code review agent. When triggered, review the current PR
+for code quality, security vulnerabilities, and best practices.
+
+Focus on:
+- OWASP top 10 vulnerabilities
+- Performance anti-patterns
+- Missing error handling
+- Test coverage gaps
+```
+
+### Frontmatter fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `description` | string | Short description shown in the UI |
+| `license` | string \| null | License identifier (e.g., MIT, Apache-2.0) |
+| `compatibility` | string \| null | Compatible CLI tools (comma-separated) |
+| `allowedTools` | string \| null | Tools the skill is allowed to use |
+| `metadata` | object \| null | Arbitrary key-value metadata |
+
+## Creating a skill
+
+1. Create a directory under `.claude/skills/` (or `.augment/skills/`):
+   ```bash
+   mkdir -p .claude/skills/my-skill
+   ```
+
+2. Add a `SKILL.md` file with frontmatter and prompt content
+
+3. The skill appears automatically in the Claws panel — no restart needed
+
+## Attaching to a Claw
+
+When creating or editing a Claw, select a skill from the dropdown. The skill's prompt is sent as a slash command when the Claw starts.
+
+## Commands
+
+In addition to skills, Spec ADE discovers slash commands from:
+- `.augment/commands/*.md` / `.claude/commands/*.md` (workspace)
+- `~/.augment/commands/*.md` / `~/.claude/commands/*.md` (user)
+
+Commands use the same YAML frontmatter format and are available as `/command-name` in chat sessions.

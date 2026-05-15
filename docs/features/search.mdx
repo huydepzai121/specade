@@ -1,0 +1,27 @@
+---
+title: Search
+description: Ripgrep-powered file content search with result navigation.
+---
+
+# Search
+
+Spec ADE provides fast file content search powered by **ripgrep** with a grep fallback for systems where ripgrep isn't available.
+
+## How to search
+
+Open the search panel from the sidebar or use the keyboard shortcut. Type your query and results appear in real-time.
+
+## Search features
+
+- **Regex support** — search with regular expressions
+- **Case sensitivity** — toggle case-sensitive matching
+- **File filtering** — limit search to specific file types or paths
+- **Result grouping** — results grouped by file with line numbers
+- **Click to navigate** — click any result to open the file at that line
+- **Context lines** — see surrounding lines for each match
+
+## Implementation
+
+The backend uses ripgrep (`rg`) for search when available, falling back to grep. Results are streamed to the frontend for responsive display even on large codebases.
+
+File tree search uses the `ignore` crate for gitignore-aware file discovery, with hardcoded exclusions for `node_modules` and `.git`.

@@ -1,0 +1,92 @@
+---
+title: Cài đặt
+description: Cài đặt Spec ADE trên macOS, Linux hoặc Windows.
+---
+
+# Cài đặt
+
+## npm (khuyến nghị)
+
+Cách nhanh nhất để cài đặt Spec ADE:
+
+```bash
+npm install -g @spec-ade/cli
+```
+
+Lệnh này cài đặt command `spec-ade` toàn cục. Package tự động tải binary phù hợp cho nền tảng của bạn.
+
+### Nền tảng được hỗ trợ
+
+| Nền tảng | Kiến trúc | Package |
+|----------|-----------|---------|
+| macOS | Apple Silicon (ARM64) | `@spec-ade/cli-darwin-arm64` |
+| Linux | x86_64 | `@spec-ade/cli-linux-x64` |
+| Linux | ARM64 | `@spec-ade/cli-linux-arm64` |
+| Windows | x86_64 | `@spec-ade/cli-win32-x64` |
+
+<Note>
+  Binary cho từng nền tảng được cài qua `optionalDependencies`. Nếu bạn dùng `--no-optional` khi cài, binary sẽ không có. Cài lại mà không dùng flag đó.
+</Note>
+
+## Yêu cầu hệ thống
+
+- **Node.js** >= 18 (cho cài đặt npm)
+- **Git** (cho tính năng tích hợp git)
+- Không cần Rust toolchain — binary được biên dịch sẵn với tất cả dependency được liên kết tĩnh
+
+## Xác nhận cài đặt
+
+```bash
+spec-ade --version
+```
+
+## Khởi chạy
+
+```bash
+spec-ade
+```
+
+Lệnh này khởi động backend server tại `http://localhost:3100` và tự động mở trình duyệt.
+
+## Tham số CLI
+
+| Flag | Biến môi trường | Mặc định | Mô tả |
+|------|-----------------|----------|-------|
+| `-H`, `--host` | `SPEC_ADE_HOST` | `0.0.0.0` | Host để bind |
+| `-p`, `--port` | `SPEC_ADE_PORT` | `3100` | Port để bind |
+| `--no-open` | — | `false` | Không mở trình duyệt khi khởi động |
+| `--reset-auth` | — | `false` | Xóa access key và session secret |
+
+Ưu tiên: Tham số CLI > biến môi trường > giá trị mặc định.
+
+### Ví dụ
+
+```bash
+# Chạy trên port tùy chỉnh
+spec-ade --port 4000
+
+# Chạy mà không mở trình duyệt
+spec-ade --no-open
+
+# Chỉ bind localhost
+spec-ade --host 127.0.0.1
+
+# Reset thông tin xác thực
+spec-ade --reset-auth
+```
+
+## Biến môi trường
+
+| Biến | Mặc định | Mô tả |
+|------|----------|-------|
+| `SPEC_ADE_HOST` | `0.0.0.0` | Host để bind backend server |
+| `SPEC_ADE_PORT` | `3100` | Port cho backend server |
+| `VITE_API_BASE_URL` | same-origin | Base URL cho frontend API call |
+
+## Ứng dụng desktop
+
+Spec ADE cũng có dạng ứng dụng desktop native qua Tauri. Xem [Ứng dụng Desktop](/features/desktop-app) để biết chi tiết về Tauri wrapper và hỗ trợ PWA.
+
+## Bước tiếp theo
+
+Sau khi cài đặt, theo dõi [Bắt đầu nhanh](/getting-started/quickstart) để mở project đầu tiên.

@@ -1,0 +1,11 @@
+.DS_Store
+**/.DS_Store
+.playwright-mcp/
+test.txt
+*.png
+augment-docs-snapshot.md
+lumide-landing-snapshot.md
+spec-ade-landing 3/
+node_modules/
+.env
+.env.local

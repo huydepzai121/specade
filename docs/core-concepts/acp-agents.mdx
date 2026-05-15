@@ -1,0 +1,86 @@
+---
+title: ACP Agents
+description: Agent Client Protocol integration — custom agents, PTY vs ACP modes.
+---
+
+# ACP Agents
+
+Spec ADE supports the **Agent Client Protocol (ACP)** for connecting to AI agents beyond the built-in Auggie and Claude Code CLIs. ACP enables structured communication with agents that implement the protocol.
+
+## Agent registry
+
+Agents are registered in `settings.json`:
+
+```json
+{
+  "agents": [
+    {
+      "id": "builtin:auggie",
+      "name": "Auggie",
+      "mode": "pty"
+    },
+    {
+      "id": "builtin:claude",
+      "name": "Claude Code",
+      "mode": "pty"
+    },
+    {
+      "id": "custom:my-agent",
+      "name": "My Custom Agent",
+      "mode": "acp",
+      "command": "/usr/local/bin/my-agent",
+      "args": ["--mode", "acp"],
+      "env": {
+        "API_KEY": "..."
+      }
+    }
+  ]
+}
+```
+
+## PTY vs ACP mode
+
+| Aspect | PTY Mode | ACP Mode |
+|--------|----------|----------|
+| Communication | Raw terminal I/O via WebSocket | Structured JSON messages via ACP protocol |
+| UI | xterm terminal emulator | Rich chat interface with tool calls |
+| Built-in agents | Auggie, Claude Code | Custom agents |
+| Permission handling | Terminal-level (approve/deny in terminal) | Structured permission requests via UI/Telegram |
+| History | Terminal replay buffer | Structured message history (JSON) |
+
+## How ACP works
+
+1. **Spawn** — `POST /api/acp/spawn` starts the agent process
+2. **Connect** — WebSocket at `/api/acp/{id}/ws` relays messages
+3. **Communicate** — Agent sends/receives structured events:
+   - `message_chunk` / `thought_chunk` — streaming text
+   - `tool_call` / `tool_call_update` — tool execution
+   - `permission_request` — asks for user approval
+   - `session_state` — agent state changes
+   - `plan` — agent's execution plan
+4. **Idle** — Agent waits for next prompt
+
+## Attach-or-spawn pattern
+
+When connecting to an ACP agent, Spec ADE checks if a live connection already exists:
+- **Exists** — reattaches to the running agent
+- **Doesn't exist** — spawns a new process
+
+Idle connections are cleaned up every 5 minutes.
+
+## Event replay
+
+ACP connections maintain an event log with monotonic sequence numbers. When a WebSocket reconnects, the client sends `?after_seq=N` and the backend replays missed events before switching to live streaming.
+
+## Registering a custom agent
+
+To add your own agent:
+
+1. Implement the [Agent Client Protocol](https://github.com/anthropics/agent-client-protocol) in your agent
+2. Add an entry to the `agents` array in settings with `mode: "acp"`
+3. Specify the `command`, `args`, and optional `env` for launching your agent
+4. The agent appears in the session creation dropdown
+
+<Note>
+  ACP connections run on dedicated threads (not the async tokio runtime) because ACP futures are `!Send`. Each connection gets its own single-threaded tokio runtime with a `LocalSet`.
+</Note>

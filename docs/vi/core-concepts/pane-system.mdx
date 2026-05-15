@@ -1,0 +1,68 @@
+---
+title: Hệ thống Pane
+description: Layout pane đệ quy với 9 loại tab, chia, resize và preset.
+---
+
+# Hệ thống Pane
+
+Spec ADE sử dụng cây pane đệ quy cho layout workspace — tương tự cách JetBrains IDE xử lý việc chia editor. Bạn có thể chia bất kỳ Pane nào theo chiều ngang hoặc dọc, tạo ra một lưới panel linh hoạt.
+
+## Loại tab
+
+Mỗi Pane có thể chứa các tab thuộc 9 loại khác nhau:
+
+| Loại | Mô tả | Phím tắt |
+|------|-------|----------|
+| **Session** | Chat với AI agent | — |
+| **File** | Trình soạn thảo code (CodeMirror 6) | Nhấp vào file trong cây |
+| **Spec** | Trình xem tài liệu OpenSpec | — |
+| **Merge** | Trình soạn thảo merge 3 chiều | Từ xung đột git |
+| **Diff** | Trình xem diff song song | Từ panel git |
+| **Compare** | Chế độ xem so sánh branch | Từ panel git |
+| **Git Log** | Lịch sử commit với đồ thị | Từ panel git |
+| **Terminal** | Terminal độc lập | — |
+| **Monitor** | Màn hình theo dõi tiến trình/hệ thống | — |
+
+## Chia pane
+
+- **Chia sang phải**: `Ctrl+\` (macOS: `⌘+\`)
+- **Chia xuống dưới**: `Ctrl+Shift+\` (macOS: `⌘+⇧+\`)
+
+Bạn cũng có thể kéo một tab đến cạnh của một Pane để chia nó.
+
+## Cấu trúc cây pane
+
+Layout là một cây đệ quy gồm hai loại node:
+
+- **AxisNode** — một container chia (ngang hoặc dọc) với các member con
+- **PaneNode** — một node lá chứa thanh tab và vùng nội dung
+
+```
+AxisNode (horizontal)
+├── PaneNode [Session: "Auggie 1", File: "index.ts"]
+└── AxisNode (vertical)
+    ├── PaneNode [File: "auth.ts"]
+    └── PaneNode [Terminal: "bash"]
+```
+
+## Thay đổi kích thước
+
+Kéo thanh điều khiển giữa các Pane để thay đổi kích thước. Cây pane tự động tính toán lại tỷ lệ.
+
+## Preset layout
+
+Spec ADE bao gồm các preset layout tích hợp sẵn:
+
+- **Single** — một pane, toàn bộ chiều rộng
+- **Side by side** — hai pane, chia theo chiều ngang
+- **Grid** — bốn pane trong lưới 2×2
+
+Bạn cũng có thể lưu preset tùy chỉnh và chuyển đổi giữa chúng.
+
+## Lưu trữ
+
+Layout được lưu theo từng project trong `settings.json` dưới `projectLayouts`. Một `lastLayout` toàn cục lưu layout gần nhất (đã loại bỏ tab) làm template cho các project mới.
+
+## Tự động gộp
+
+Khi bạn đóng tab cuối cùng trong một Pane, Pane đó sẽ tự động bị xóa và Pane cha sẽ được gộp lại. Điều này giữ cho layout gọn gàng mà không cần dọn dẹp thủ công.

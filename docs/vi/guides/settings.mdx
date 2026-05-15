@@ -1,0 +1,117 @@
+---
+title: Cài đặt
+description: Tham chiếu đầy đủ cho tất cả tùy chọn cấu hình Spec ADE.
+---
+
+# Cài đặt
+
+Toàn bộ cài đặt Spec ADE được lưu trong `~/.config/spec-ade/settings.json` và quản lý qua backend API (`GET/PUT /api/settings`). UI cung cấp panel cài đặt cho các tùy chọn phổ biến.
+
+## Cài đặt editor
+
+| Cài đặt | Kiểu | Mặc định | Mô tả |
+|---------|------|----------|-------|
+| `lineNumbers` | boolean | `true` | Hiển thị số dòng trong editor |
+| `lineWrapping` | boolean | `false` | Xuống dòng thay vì cuộn ngang |
+| `bracketMatching` | boolean | `true` | Highlight cặp ngoặc khớp |
+| `autocomplete` | boolean | `true` | Bật autocomplete code |
+| `activateOnTyping` | boolean | `true` | Kích hoạt autocomplete khi gõ |
+| `closeBrackets` | boolean | `true` | Tự đóng ngoặc, dấu ngoặc kép, v.v. |
+| `lintGutter` | boolean | `true` | Hiển thị marker lint/diagnostic trong gutter |
+| `indentGuides` | boolean | `true` | Hiển thị đường indent guide dọc |
+| `highlightActiveLine` | boolean | `true` | Highlight dòng hiện tại |
+| `rainbowBrackets` | boolean | `true` | Tô màu cặp ngoặc lồng nhau |
+| `previewFontSize` | number | `14` | Cỡ chữ cho preview markdown |
+| `codeFontSize` | number | `13` | Cỡ chữ cho code editor |
+
+## Cài đặt hiển thị terminal
+
+| Cài đặt | Kiểu | Mặc định | Mô tả |
+|---------|------|----------|-------|
+| `fontFamily` | string | mặc định hệ thống | Font family terminal |
+| `useCustomFont` | boolean | `false` | Dùng font tùy chỉnh thay vì mặc định hệ thống |
+| `customFontFamily` | string | `""` | Tên font family tùy chỉnh |
+| `fontSize` | number | `13` | Cỡ chữ terminal |
+| `fontWeight` | number | `400` | Độ đậm font terminal (CSS numeric, ví dụ 400, 700) |
+| `lineHeight` | number | `1.2` | Hệ số chiều cao dòng terminal |
+
+## Cài đặt CLI và timing
+
+| Cài đặt | Kiểu | Mặc định | Mô tả |
+|---------|------|----------|-------|
+| `auggieCommand` | string | `"auggie"` | Command tùy chỉnh cho Auggie CLI |
+| `claudeCommand` | string | `"claude"` | Command tùy chỉnh cho Claude Code CLI |
+| `slashCommandDelayMs` | number | `100` | Delay sau khi gõ `/` cho slash command |
+| `tabDelayMs` | number | `50` | Delay trước khi gửi phím Tab |
+| `enterDelayMs` | number | `50` | Delay trước khi gửi phím Enter |
+
+## Cài đặt Git
+
+| Cài đặt | Kiểu | Mặc định | Mô tả |
+|---------|------|----------|-------|
+| `gitPollIntervalSecs` | number | `3` | Khoảng thời gian poll git watcher (giây) |
+| `autoApplyNonConflicting` | boolean | `true` | Tự áp dụng thay đổi không xung đột trong merge editor |
+
+## Cài đặt layout
+
+| Cài đặt | Kiểu | Mặc định | Mô tả |
+|---------|------|----------|-------|
+| `projectLayouts` | object | `{}` | Layout cây pane theo project (key theo project ID) |
+| `lastLayout` | object | `null` | Template layout gần nhất (đã loại tab) cho project mới |
+| `layoutPresets` | array | `[]` | Preset layout có tên (tên + cấu trúc cây pane) |
+
+## Hệ thống thiết kế
+
+Spec ADE sử dụng CSS custom property cho theming. Hệ thống thiết kế hỗ trợ chế độ dark (mặc định) và light.
+
+### Token cốt lõi
+
+| Token | Dark | Light | Sử dụng |
+|-------|------|-------|---------|
+| `--color-bg` | Nền tối | Nền sáng | Nền trang |
+| `--color-surface` | Sáng hơn một chút | Trắng | Nền card/panel |
+| `--color-raised` | Sáng hơn nữa | Xám nhạt | Phần tử nổi |
+| `--color-border` | Border tinh tế | Border nhạt | Border và đường phân cách |
+| `--color-text` | Trắng | Tối | Text chính |
+| `--color-text-secondary` | Xám | Xám trung bình | Text phụ |
+| `--color-accent` | Tím | Tím | Phần tử tương tác |
+
+### Spacing
+
+| Token | Giá trị |
+|-------|---------|
+| `--space-xs` | 4px |
+| `--space-sm` | 8px |
+| `--space-md` | 16px |
+| `--space-lg` | 24px |
+| `--space-xl` | 32px |
+
+### Typography
+
+| Token | Giá trị |
+|-------|---------|
+| `--font-sans` | IBM Plex Sans |
+| `--font-mono` | Lilex |
+
+### Radius
+
+| Token | Giá trị |
+|-------|---------|
+| `--radius-xs` | 4px |
+| `--radius-sm` | 6px |
+| `--radius-md` | 8px |
+| `--radius-lg` | 12px |
+| `--radius-xl` | 16px |
+
+## Cập nhật từng phần
+
+Cài đặt hỗ trợ cập nhật từng phần với ngữ nghĩa `Option<Option<T>>`:
+- **Vắng mặt** — trường bị bỏ qua (không thay đổi)
+- **`null`** — trường được xóa về mặc định
+- **Giá trị** — trường được đặt thành giá trị mới
+
+## Migration lưu trữ
+
+Cài đặt ban đầu được lưu trong SQLite (`db.db`). Migration một lần sang JSON chạy tự động khi tải lần đầu. Dependency `rusqlite` được giữ tạm thời cho migration này.
+
+Cài đặt editor và terminal cũng migrate từ `localStorage` sang backend khi tải lần đầu.

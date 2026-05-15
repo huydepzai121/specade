@@ -1,0 +1,93 @@
+---
+title: Quickstart
+description: Your first Spec ADE session in 5 minutes.
+---
+
+# Quickstart
+
+This guide walks you through installing Spec ADE, opening a project, chatting with an AI agent, and spawning your first Claw.
+
+## 1. Install
+
+```bash
+npm install -g @spec-ade/cli
+```
+
+## 2. Launch
+
+```bash
+spec-ade
+```
+
+Your browser opens to `http://localhost:3100`. You'll see the Spec ADE workspace with an empty project list.
+
+## 3. Open a project
+
+Click the **+** button in the sidebar to add a project. Point it at any folder on your filesystem:
+
+```
+/Users/you/my-project
+```
+
+Spec ADE indexes the file tree (respecting `.gitignore`) and shows it in the sidebar. Git status indicators appear next to modified files.
+
+## 4. Start a chat session
+
+Click **New Session** in the session bar. Choose your AI tool:
+
+- **Auggie** — Augment's CLI agent
+- **Claude Code** — Anthropic's CLI agent
+
+Type a message and press Enter. The agent reads your codebase, calls tools (you'll see each tool call in real-time), and responds with suggestions or code changes.
+
+```
+You: Analyze the project structure and suggest improvements
+
+Agent: I'll scan the codebase to understand the architecture.
+  ✓ Read index.html
+  ✓ Glob **/*.ts
+
+This is a single-page React app using Babel standalone...
+```
+
+## 5. Spawn a Claw
+
+Claws are autonomous agent instances that run skills on your project. To create one:
+
+1. Open the **Claws** panel from the sidebar
+2. Click **New Claw**
+3. Configure:
+   - **Name**: `review-bot`
+   - **Agent**: Choose Auggie or Claude Code
+   - **Skill**: Select a skill (e.g., `review-pr`)
+   - **Permission Mode**: `auto_approve` (for hands-free operation)
+4. Click **Start**
+
+The Claw runs the skill against your project. You can monitor its output in real-time, and it will idle when done — ready for the next trigger.
+
+## 6. Use git from the sidebar
+
+Open the **Git** panel to see:
+
+- Current branch and status
+- Changed files with diff previews
+- Stage, unstage, commit, and push — all from the sidebar
+
+Each worktree gets its own branch, so agents can work in parallel without conflicts.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Projects" icon="folder" href="/core-concepts/projects">
+    Learn how projects, file trees, and multi-project state work.
+  </Card>
+  <Card title="Claws" icon="robot" href="/core-concepts/claws">
+    Deep dive into autonomous agents, permissions, and scheduling.
+  </Card>
+  <Card title="Skills" icon="wand-magic-sparkles" href="/core-concepts/skills">
+    Create and share reusable agent skills.
+  </Card>
+  <Card title="Keyboard Shortcuts" icon="keyboard" href="/features/keyboard-shortcuts">
+    Master the JetBrains-inspired shortcut system.
+  </Card>
+</CardGroup>

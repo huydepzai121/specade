@@ -1,0 +1,83 @@
+---
+title: Ứng dụng Desktop
+description: Ứng dụng desktop native Tauri v2 và hỗ trợ PWA.
+---
+
+# Ứng dụng Desktop
+
+Spec ADE có dạng ứng dụng desktop native qua Tauri v2, ngoài chế độ browser và PWA.
+
+## Ba cách chạy
+
+| Chế độ | Cách | Phù hợp cho |
+|--------|------|-------------|
+| **Browser** | `spec-ade` → mở `localhost:3100` | Phát triển, truy cập từ xa |
+| **PWA** | Cài từ trình duyệt | Cửa sổ độc lập, không cần Tauri |
+| **Desktop (Tauri)** | Tải ứng dụng native | Trải nghiệm native đầy đủ |
+
+## Kiến trúc Tauri sidecar
+
+Ứng dụng desktop sử dụng Tauri v2 với pattern **sidecar**:
+
+```
+┌─────────────────────────────┐
+│     Tauri Window (WebView)  │
+│     ┌───────────────────┐   │
+│     │   Vue 3 SPA       │   │
+│     │   (from dist/spa) │   │
+│     └───────────────────┘   │
+├─────────────────────────────┤
+│     Tauri Rust Shell        │
+│     ┌───────────────────┐   │
+│     │  Sidecar Process  │   │
+│     │  (spec-ade binary)│   │
+│     └───────────────────┘   │
+└─────────────────────────────┘
+```
+
+Tauri shell:
+1. Khởi động binary `spec-ade` backend dưới dạng sidecar process
+2. Chờ health endpoint phản hồi
+3. Tải SPA trong cửa sổ WebView native
+4. Quản lý vòng đời sidecar (start, health check, restart)
+
+## Hỗ trợ nền tảng
+
+| Nền tảng | Trạng thái | Định dạng bundle |
+|----------|-----------|-----------------|
+| macOS | Chính | `.app`, `.dmg` |
+| Windows | Phụ | `.exe` (NSIS installer) |
+| Linux | Nice-to-have | `.AppImage`, `.deb`, `.rpm` |
+
+## Cấu hình cửa sổ
+
+- Kích thước mặc định: 1280×800
+- Kích thước tối thiểu: 900×600
+- Tiêu đề: "Spec ADE"
+- Bundle identifier: `com.spec-ade.desktop`
+
+## Hỗ trợ PWA
+
+Spec ADE cũng hoạt động như Progressive Web App:
+
+- **Prompt cài đặt** — trình duyệt đề xuất cài ứng dụng
+- **Cửa sổ độc lập** — chạy trong cửa sổ riêng không có chrome trình duyệt
+- **Push notification** — nhận thông báo khi tác vụ agent dài hoàn thành
+- **Cache offline** — asset tĩnh được cache qua Workbox service worker
+
+Build phiên bản PWA:
+```bash
+bun run build:pwa
+```
+
+## Build ứng dụng desktop
+
+```bash
+# Development
+cd src-tauri && bunx tauri dev --no-dev-server-wait
+
+# Production build
+cd src-tauri && bunx tauri build
+```
+
+Build tạo installer cho từng nền tảng trong `src-tauri/target/release/bundle/`.

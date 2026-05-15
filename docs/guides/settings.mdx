@@ -1,0 +1,117 @@
+---
+title: Settings
+description: Complete reference for all Spec ADE configuration options.
+---
+
+# Settings
+
+All Spec ADE settings are stored in `~/.config/spec-ade/settings.json` and managed through the backend API (`GET/PUT /api/settings`). The UI provides a settings panel for common options.
+
+## Editor settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `lineNumbers` | boolean | `true` | Show line numbers in the editor |
+| `lineWrapping` | boolean | `false` | Wrap long lines instead of horizontal scroll |
+| `bracketMatching` | boolean | `true` | Highlight matching bracket pairs |
+| `autocomplete` | boolean | `true` | Enable code autocomplete |
+| `activateOnTyping` | boolean | `true` | Trigger autocomplete while typing |
+| `closeBrackets` | boolean | `true` | Auto-close brackets, quotes, etc. |
+| `lintGutter` | boolean | `true` | Show lint/diagnostic markers in gutter |
+| `indentGuides` | boolean | `true` | Show vertical indent guide lines |
+| `highlightActiveLine` | boolean | `true` | Highlight the current line |
+| `rainbowBrackets` | boolean | `true` | Color-code nested bracket pairs |
+| `previewFontSize` | number | `14` | Font size for markdown preview |
+| `codeFontSize` | number | `13` | Font size for code editor |
+
+## Terminal display settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `fontFamily` | string | system default | Terminal font family |
+| `useCustomFont` | boolean | `false` | Use custom font instead of system default |
+| `customFontFamily` | string | `""` | Custom font family name |
+| `fontSize` | number | `13` | Terminal font size |
+| `fontWeight` | number | `400` | Terminal font weight (CSS numeric, e.g. 400, 700) |
+| `lineHeight` | number | `1.2` | Terminal line height multiplier |
+
+## CLI and timing settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `auggieCommand` | string | `"auggie"` | Custom command for Auggie CLI |
+| `claudeCommand` | string | `"claude"` | Custom command for Claude Code CLI |
+| `slashCommandDelayMs` | number | `100` | Delay after typing `/` for slash commands |
+| `tabDelayMs` | number | `50` | Delay before sending Tab key |
+| `enterDelayMs` | number | `50` | Delay before sending Enter key |
+
+## Git settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `gitPollIntervalSecs` | number | `3` | Git watcher poll interval in seconds |
+| `autoApplyNonConflicting` | boolean | `true` | Auto-apply non-conflicting changes in merge editor |
+
+## Layout settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `projectLayouts` | object | `{}` | Per-project pane tree layout (keyed by project ID) |
+| `lastLayout` | object | `null` | Most recent layout template (tabs stripped) for new projects |
+| `layoutPresets` | array | `[]` | Named layout presets (name + pane tree structure) |
+
+## Design system
+
+Spec ADE uses CSS custom properties for theming. The design system supports dark (default) and light modes.
+
+### Core tokens
+
+| Token | Dark | Light | Usage |
+|-------|------|-------|-------|
+| `--color-bg` | Dark background | Light background | Page background |
+| `--color-surface` | Slightly lighter | White | Card/panel background |
+| `--color-raised` | Even lighter | Light gray | Elevated elements |
+| `--color-border` | Subtle border | Light border | Borders and dividers |
+| `--color-text` | White | Dark | Primary text |
+| `--color-text-secondary` | Gray | Medium gray | Secondary text |
+| `--color-accent` | Violet | Violet | Interactive elements |
+
+### Spacing
+
+| Token | Value |
+|-------|-------|
+| `--space-xs` | 4px |
+| `--space-sm` | 8px |
+| `--space-md` | 16px |
+| `--space-lg` | 24px |
+| `--space-xl` | 32px |
+
+### Typography
+
+| Token | Value |
+|-------|-------|
+| `--font-sans` | IBM Plex Sans |
+| `--font-mono` | Lilex |
+
+### Radius
+
+| Token | Value |
+|-------|-------|
+| `--radius-xs` | 4px |
+| `--radius-sm` | 6px |
+| `--radius-md` | 8px |
+| `--radius-lg` | 12px |
+| `--radius-xl` | 16px |
+
+## Partial updates
+
+Settings support partial updates with `Option<Option<T>>` semantics:
+- **Absent** — field is skipped (not changed)
+- **`null`** — field is cleared to default
+- **Value** — field is set to the new value
+
+## Storage migration
+
+Settings were originally stored in SQLite (`db.db`). A one-time migration to JSON runs automatically on first load. The `rusqlite` dependency is kept temporarily for this migration.
+
+Editor and terminal settings also migrate from `localStorage` to the backend on first load.

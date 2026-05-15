@@ -1,0 +1,74 @@
+---
+title: Giấy phép
+description: Portal giấy phép, quy trình kích hoạt và tùy chọn gói.
+---
+
+# Giấy phép
+
+Spec ADE sử dụng hệ thống giấy phép offline dựa trên chữ ký số Ed25519 và token JWT. Giấy phép được gắn với máy cụ thể qua hardware fingerprint.
+
+## Cách hoạt động
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│ License Portal│────▶│  .lic file   │────▶│  Spec ADE    │
+│ (generates)  │     │  (JWT token) │     │  (activates) │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+1. **Portal tạo keypair** — Cặp khóa Ed25519 private/public lưu trong `~/.config/spec-ade-portal/`
+2. **Public key nhúng trong binary** — sao chép vào `spec-ade-api/keys/license-public.key` trước khi build
+3. **Portal ký giấy phép** — Token JWT được ký bằng private key
+4. **Spec ADE xác minh** — Public key nhúng xác thực token giấy phép offline
+
+## Quy trình kích hoạt
+
+1. Khởi chạy Spec ADE — nếu chưa có giấy phép, trang kích hoạt xuất hiện
+2. Ghi nhận **machine fingerprint** hiển thị trên trang kích hoạt
+3. Mở License Portal (`just portal-run` → `http://localhost:3000`)
+4. Nhập machine fingerprint và tên tổ chức
+5. Chọn thời hạn gói
+6. Tải file `.lic` hoặc sao chép chuỗi JWT
+7. Dán JWT hoặc upload file `.lic` trên trang kích hoạt Spec ADE
+
+## Gói
+
+| Gói | Thời hạn | Ngày |
+|-----|----------|------|
+| 1 tháng | 30 ngày | 30 |
+| 1 năm | 365 ngày | 365 |
+| 3 năm | 1095 ngày | 1095 |
+| 5 năm | 1825 ngày | 1825 |
+
+## Phân phối key
+
+Để build Spec ADE với xác minh giấy phép:
+
+```bash
+# 1. Chạy portal để tạo key (chỉ lần đầu)
+just portal-run
+
+# 2. Sao chép public key vào project API
+cp ~/.config/spec-ade-portal/public.key spec-ade-api/keys/license-public.key
+
+# 3. Build — public key được nhúng lúc biên dịch
+just build-release
+```
+
+## Dữ liệu license portal
+
+| Mục | Vị trí |
+|-----|--------|
+| Private key | `~/.config/spec-ade-portal/private.key` |
+| Public key | `~/.config/spec-ade-portal/public.key` |
+| Database giấy phép | `~/.config/spec-ade-portal/licenses.db` (SQLite) |
+
+## Xác minh offline
+
+Giấy phép được xác minh hoàn toàn offline — không cần gọi mạng. Token JWT chứa:
+- Machine fingerprint (phải khớp máy hiện tại)
+- Tên tổ chức
+- Ngày hết hạn
+- Chữ ký (Ed25519)
+
+Public key nhúng xác minh chữ ký. Nếu fingerprint khớp và token chưa hết hạn, giấy phép hợp lệ.

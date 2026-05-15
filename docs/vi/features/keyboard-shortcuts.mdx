@@ -1,0 +1,64 @@
+---
+title: Phím tắt
+description: Phím tắt kiểu JetBrains với ưu tiên theo ngữ cảnh.
+---
+
+# Phím tắt
+
+Spec ADE sử dụng hệ thống phím tắt tập trung lấy cảm hứng từ JetBrains IDE. Phím tắt nhận biết ngữ cảnh — cùng tổ hợp phím có thể làm việc khác nhau tùy thuộc pane nào đang focus.
+
+## Cách phím tắt hoạt động
+
+- **Store tập trung** — tất cả phím tắt đăng ký trong `shortcut-store.ts`
+- **Nhận biết ngữ cảnh** — phím tắt với điều kiện `when` ưu tiên hơn phím tắt toàn cục
+- **Phát hiện nền tảng** — phát hiện `isMac` cho binding riêng macOS
+- **Phím tắt có phạm vi** — một số phím tắt thuộc phạm vi component cụ thể qua `@keydown`
+
+## Chung
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Command palette | `⌘+Shift+P` | `Ctrl+Shift+P` |
+| Mở nhanh file | `⌘+P` | `Ctrl+P` |
+| Bật/tắt sidebar | `⌘+B` | `Ctrl+B` |
+| Session mới | `⌘+N` | `Ctrl+N` |
+| Đóng tab | `⌘+W` | `Ctrl+W` |
+| Cài đặt | `⌘+,` | `Ctrl+,` |
+
+## Editor
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Chuyển xem/sửa | `⌘+K` | `Ctrl+K` |
+| Lưu file | `⌘+S` | `Ctrl+S` |
+| Tìm trong file | `⌘+F` | `Ctrl+F` |
+| Chia phải | `⌘+\` | `Ctrl+\` |
+| Chia xuống | `⌘+⇧+\` | `Ctrl+Shift+\` |
+
+## Điều hướng
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Tab tiếp | `⌘+⇧+]` | `Ctrl+Tab` |
+| Tab trước | `⌘+⇧+[` | `Ctrl+Shift+Tab` |
+| Đến tab 1-9 | `⌘+1` đến `⌘+9` | `Alt+1` đến `Alt+9` |
+
+## Terminal
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Terminal mới | `⌘+\`` | `` Ctrl+` `` |
+| Xóa terminal | `⌘+K` | `Ctrl+K` |
+| Sao chép | `⌘+C` | `Ctrl+C` (khi chọn text) |
+| Dán | `⌘+V` | `Ctrl+V` |
+
+## Git
+
+| Hành động | macOS | Windows/Linux |
+|-----------|-------|---------------|
+| Commit | `⌘+Enter` | `Ctrl+Enter` |
+| Stage file | `⌘+⇧+A` | `Ctrl+Shift+A` |
+
+## Tùy chỉnh
+
+Phím tắt chưa hỗ trợ tùy chỉnh bởi người dùng. Bộ phím tắt hiện tại theo quy ước JetBrains với điều chỉnh riêng macOS (⌘ thay vì Ctrl).

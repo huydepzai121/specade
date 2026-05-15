@@ -1,0 +1,61 @@
+---
+title: Terminal
+description: Integrated PTY terminal with xterm.js, slash commands, and cross-platform shell support.
+---
+
+# Terminal
+
+Spec ADE includes a full terminal emulator powered by xterm.js and PTY (pseudo-terminal) on the backend. It's not a simplified console — it's a real terminal that supports colors, cursor movement, and interactive programs.
+
+## Terminal emulation
+
+The terminal uses:
+- **xterm.js** (v6) on the frontend for rendering
+- **portable-pty** on the backend for PTY spawning
+- **WebSocket** for real-time I/O (`/api/terminals/{id}/ws`)
+
+### WebSocket protocol
+
+| Direction | Event | Description |
+|-----------|-------|-------------|
+| Client → Server | `input` | Raw terminal input |
+| Client → Server | `submit` | Content + Enter |
+| Client → Server | `resize` | Terminal dimensions (cols, rows) |
+| Server → Client | `output` | PTY output |
+| Server → Client | `ready` | Agent ready (bracketed paste detected) |
+| Server → Client | `exit` | Process exited with code |
+
+## Shell support
+
+| Platform | Default Shell |
+|----------|--------------|
+| macOS/Linux | `$SHELL -l` (login shell) |
+| Windows | `pwsh.exe` > `cmd.exe` (PowerShell preferred) |
+
+## Slash commands
+
+Slash commands are a way to invoke skills and commands from the terminal:
+
+```
+/ → (delay) → command-name → Tab → args → Enter
+```
+
+The sequence uses raw key events outside bracketed paste mode. Timing is configurable:
+- `slashCommandDelayMs` — delay after `/`
+- `tabDelayMs` — delay before Tab
+- `enterDelayMs` — delay before Enter
+
+## Terminal replay
+
+When reconnecting to a session, the terminal replays its history. The replay is trimmed at the last screen-clear escape sequence to avoid showing stale content. Query responses (CPR, DA, focus sequences) are stripped via `stripTerminalQueryResponses()`.
+
+## PTY details
+
+- **Write chunking**: 1KB chunks with flush (`PTY_WRITE_CHUNK_SIZE = 1024`) to prevent pipe buffer overflow
+- **UTF-8 safety**: `utf8_leftover` buffer handles split multi-byte characters across chunk boundaries
+- **OSC 7**: CWD tracking parsed from PTY output for working directory detection
+- **OSC 5522**: Image paste protocol with one-time password for security
+
+## `ade` helper
+
+Spec ADE injects an `ade` shell helper into bash/zsh/sh sessions (PowerShell on Windows). This helper provides integration between the terminal and the Spec ADE UI. Unknown shells skip injection.

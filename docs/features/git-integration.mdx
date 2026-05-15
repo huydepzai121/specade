@@ -1,0 +1,86 @@
+---
+title: Git Integration
+description: Full git workflow — status, staging, commits, branches, merge editor, and diff viewer.
+---
+
+# Git Integration
+
+Spec ADE provides comprehensive git integration using a hybrid approach: **git2** (libgit2 bindings) for fast local reads and **git CLI** for mutations and complex operations.
+
+## Git panel
+
+The sidebar git panel shows:
+
+- **Current branch** and HEAD status
+- **Changed files** grouped by status (modified, added, deleted, untracked)
+- **Diff preview** for each file
+- **Stage/unstage** buttons per file or bulk
+
+## Operations
+
+| Operation | Method | Description |
+|-----------|--------|-------------|
+| Status | git2 + CLI (porcelain v2) | File status with rename detection |
+| Stage/Unstage | CLI | Add or remove files from index |
+| Commit | CLI | Create commits with message |
+| Fetch/Pull/Push | CLI | Remote operations |
+| Branch create/switch/delete | CLI | Branch management |
+| Stash | CLI | Save/restore working changes |
+| Merge | CLI + git2 | 3-way merge with conflict resolution |
+
+## Merge editor
+
+When merge conflicts occur, Spec ADE opens a 3-way merge editor:
+
+```
+┌──────────┬──────────┬──────────┐
+│  Theirs  │  Result  │  Yours   │
+│ (remote) │ (merged) │ (local)  │
+└──────────┴──────────┴──────────┘
+```
+
+Features:
+- Side-by-side diff with syntax highlighting
+- Click to accept "theirs" or "yours" for each conflict
+- Manual editing in the result pane
+- Auto-resolve for non-conflicting changes
+- Connector lines between corresponding sections
+
+## Diff viewer
+
+The diff viewer shows side-by-side comparisons with:
+- Syntax-highlighted code on both sides
+- Added/removed/modified line highlighting
+- Inner-word diff highlighting
+- Navigation between changes
+- Scroll synchronization between panes
+
+## Branch comparison
+
+Compare any two branches side-by-side:
+- File-level diff list
+- Per-file diff viewer
+- Commit history between branches
+
+## Git log
+
+The git log view shows commit history with:
+- Graph visualization (branch/merge lines)
+- Commit details (author, date, message, hash)
+- Filter bar for searching commits
+- Branch tree sidebar
+
+## File watcher
+
+Spec ADE watches the filesystem for changes and updates git status in real-time via SSE (Server-Sent Events) at `/api/projects/{id}/git/watch`.
+
+The watcher uses a `CoalesceMap` with priority scoping:
+- **Full** refresh (highest priority)
+- **Status** refresh
+- **Branches** refresh (lowest priority)
+
+Network filesystems automatically fall back to poll-only mode.
+
+## SSE reconnection
+
+If the SSE connection fails 3 times, the frontend falls back to polling for git status updates.

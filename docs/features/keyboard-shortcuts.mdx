@@ -1,0 +1,64 @@
+---
+title: Keyboard Shortcuts
+description: JetBrains-inspired keyboard shortcuts with context-aware priority.
+---
+
+# Keyboard Shortcuts
+
+Spec ADE uses a centralized shortcut system inspired by JetBrains IDEs. Shortcuts are context-aware — the same key combination can do different things depending on which pane is focused.
+
+## How shortcuts work
+
+- **Centralized store** — all shortcuts registered in `shortcut-store.ts`
+- **Context-aware** — shortcuts with `when` conditions take priority over global shortcuts
+- **Platform detection** — `isMac` detection for macOS-specific bindings
+- **Scoped shortcuts** — some shortcuts are scoped to specific components via `@keydown`
+
+## General
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Command palette | `⌘+Shift+P` | `Ctrl+Shift+P` |
+| Quick open file | `⌘+P` | `Ctrl+P` |
+| Toggle sidebar | `⌘+B` | `Ctrl+B` |
+| New session | `⌘+N` | `Ctrl+N` |
+| Close tab | `⌘+W` | `Ctrl+W` |
+| Settings | `⌘+,` | `Ctrl+,` |
+
+## Editor
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Toggle view/edit | `⌘+K` | `Ctrl+K` |
+| Save file | `⌘+S` | `Ctrl+S` |
+| Find in file | `⌘+F` | `Ctrl+F` |
+| Split right | `⌘+\` | `Ctrl+\` |
+| Split down | `⌘+⇧+\` | `Ctrl+Shift+\` |
+
+## Navigation
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Next tab | `⌘+⇧+]` | `Ctrl+Tab` |
+| Previous tab | `⌘+⇧+[` | `Ctrl+Shift+Tab` |
+| Go to tab 1-9 | `⌘+1` to `⌘+9` | `Alt+1` to `Alt+9` |
+
+## Terminal
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| New terminal | `⌘+\`` | `` Ctrl+` `` |
+| Clear terminal | `⌘+K` | `Ctrl+K` |
+| Copy | `⌘+C` | `Ctrl+C` (when text selected) |
+| Paste | `⌘+V` | `Ctrl+V` |
+
+## Git
+
+| Action | macOS | Windows/Linux |
+|--------|-------|---------------|
+| Commit | `⌘+Enter` | `Ctrl+Enter` |
+| Stage file | `⌘+⇧+A` | `Ctrl+Shift+A` |
+
+## Customization
+
+Shortcuts are not yet user-configurable. The current set follows JetBrains conventions with macOS-specific adaptations (⌘ instead of Ctrl).

@@ -1,0 +1,53 @@
+---
+title: Phiên làm việc
+description: Vòng đời session, loại CLI và quản lý tab.
+---
+
+# Phiên làm việc
+
+Một session là một instance chat hoặc terminal được kết nối với một AI agent. Mỗi session thuộc về một project và sử dụng một CLI tool cụ thể.
+
+## Tạo session
+
+Nhấp vào **New Session** trong thanh tab session. Mỗi session sẽ có:
+
+- Một UUID duy nhất
+- Một loại CLI (Auggie hoặc Claude Code)
+- Một tiêu đề (tự động tạo, nhấp đúp để đổi tên)
+- Một vị trí tab (kéo để sắp xếp lại)
+
+## Loại CLI
+
+| Loại | Chế độ | Phát hiện | Hiển thị |
+|------|--------|-----------|----------|
+| **Auggie** | PTY | Bracketed paste mode (`\x1b[?2004h`) | ● chỉ báo dấu chấm |
+| **Claude Code** | PTY | Bracketed paste mode | ◆ chỉ báo hình thoi |
+| **ACP Agent** | ACP | WebSocket protocol | Tùy chỉnh theo agent |
+
+Các session không có trường `cliType` mặc định là Auggie để tương thích ngược.
+
+## Vòng đời session
+
+```
+Created → Terminal spawned → Agent ready → Active → Idle/Closed
+```
+
+1. **Created** — `POST /api/projects/{id}/sessions` tạo session với một UUID thực
+2. **Terminal spawned** — Một tiến trình PTY khởi động với CLI tool đã chọn
+3. **Agent ready** — Được phát hiện qua tín hiệu bracketed paste mode
+4. **Active** — Người dùng đang chat, agent đang xử lý
+5. **Idle/Closed** — Session có thể được tiếp tục hoặc xóa
+
+## Quản lý tab
+
+Các tab session hỗ trợ:
+- **Kéo để sắp xếp lại** — sắp xếp lại các tab bằng cách kéo
+- **Nhấp đúp để đổi tên** — chỉnh sửa tiêu đề session trực tiếp
+- **Đóng** — xóa hoàn toàn qua `DELETE /api/sessions/{id}`
+- **Đặt tên theo CLI** — "Auggie 2", "Claude 3" được tự động tăng số
+
+## Lưu trữ
+
+Các session được lưu trữ qua các lần khởi động lại server. Backend hợp nhất dữ liệu session Auggie CLI với metadata trong bộ nhớ (tiêu đề, thứ tự tab). Lịch sử chat được lưu trong `~/.config/spec-ade/acp-history/{session_id}.json`.
+
+Trạng thái tab được lưu vào `localStorage` với tiền tố `spec-ade:tabs:`, debounced ở 300ms.

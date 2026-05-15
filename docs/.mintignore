@@ -1,0 +1,8 @@
+node_modules
+.git
+.DS_Store
+.playwright-mcp
+openspec
+assets
+Dockerfile
+*.html

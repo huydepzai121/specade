@@ -1,0 +1,60 @@
+---
+title: Chat Interface
+description: WebSocket-based chat with streaming, tool calls, and message history.
+---
+
+# Chat Interface
+
+The chat interface is the primary way to interact with AI agents in Spec ADE. It provides real-time streaming responses with tool call visualization.
+
+## How it works
+
+Communication flows through WebSocket connections:
+
+```
+Browser ←→ WebSocket ←→ Axum Backend ←→ PTY/ACP Agent
+```
+
+- **Input**: Your messages are sent as `submit` events (content + Enter)
+- **Output**: Agent responses stream back as `output` events
+- **Tools**: Each tool call is displayed inline with status indicators
+
+## Tool call visualization
+
+When an agent calls tools (Read, Glob, Grep, Bash, etc.), you see each call in real-time:
+
+```
+✓ Read index.html
+✓ Glob **/*.ts
+✓ Bash npm test
+```
+
+Tool calls are grouped with a summary: "✓ 3 tool calls". Expand to see individual calls and their results.
+
+## Message types
+
+| Type | Description |
+|------|-------------|
+| **User message** | Your input text |
+| **Agent message** | AI response with optional tool calls |
+| **Thought** | Agent's internal reasoning (ACP mode) |
+| **Plan** | Agent's execution plan (ACP mode) |
+| **Error** | Error messages from the agent or system |
+
+## Streaming
+
+Responses stream token-by-token. The chat auto-scrolls to follow new content. You can scroll up to review history — auto-scroll pauses until you scroll back to the bottom.
+
+## Chat visibility
+
+Chat visibility is toggled per CLI type and saved to `localStorage`:
+- `spec-ade:chat-hidden:auggie`
+- `spec-ade:chat-hidden:claude`
+
+## Markdown rendering
+
+Agent responses are rendered as Markdown with:
+- **Syntax highlighting** via highlight.js
+- **Math** via KaTeX
+- **Diagrams** via Mermaid
+- **Task lists**, footnotes, and GitHub-style alerts

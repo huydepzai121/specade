@@ -1,0 +1,81 @@
+---
+title: Skills
+description: Skill agent tái sử dụng — khám phá, đóng gói và chia sẻ.
+---
+
+# Skills
+
+Một Skill là một cấu hình prompt + tooling được đóng gói mà bạn có thể gắn vào bất kỳ Claw nào. Skill được tự động khám phá từ workspace và thư mục home của người dùng.
+
+## Vị trí khám phá
+
+Spec ADE quét 8 thư mục để tìm skill, theo thứ tự ưu tiên:
+
+### Workspace (ưu tiên cao hơn)
+1. `.augment/skills/*/SKILL.md`
+2. `.augment/skill/*/SKILL.md`
+3. `.claude/skills/*/SKILL.md`
+4. `.claude/skill/*/SKILL.md`
+
+### User home (ưu tiên thấp hơn)
+5. `~/.augment/skills/*/SKILL.md`
+6. `~/.augment/skill/*/SKILL.md`
+7. `~/.claude/skills/*/SKILL.md`
+8. `~/.claude/skill/*/SKILL.md`
+
+Skill ở workspace được ưu tiên hơn skill ở cấp người dùng có cùng tên.
+
+## Định dạng SKILL.md
+
+Mỗi skill là một thư mục chứa file `SKILL.md` với YAML frontmatter:
+
+```markdown
+---
+description: Review pull requests for code quality and security issues
+license: MIT
+compatibility: auggie, claude
+allowedTools: Read, Glob, Grep, Bash
+---
+
+You are a code review agent. When triggered, review the current PR
+for code quality, security vulnerabilities, and best practices.
+
+Focus on:
+- OWASP top 10 vulnerabilities
+- Performance anti-patterns
+- Missing error handling
+- Test coverage gaps
+```
+
+### Các trường frontmatter
+
+| Trường | Kiểu | Mô tả |
+|--------|------|-------|
+| `description` | string | Mô tả ngắn hiển thị trong UI |
+| `license` | string \| null | Định danh giấy phép (ví dụ: MIT, Apache-2.0) |
+| `compatibility` | string \| null | Các CLI tool tương thích (phân cách bằng dấu phẩy) |
+| `allowedTools` | string \| null | Các tool mà skill được phép sử dụng |
+| `metadata` | object \| null | Metadata key-value tùy ý |
+
+## Tạo skill
+
+1. Tạo một thư mục trong `.claude/skills/` (hoặc `.augment/skills/`):
+   ```bash
+   mkdir -p .claude/skills/my-skill
+   ```
+
+2. Thêm file `SKILL.md` với frontmatter và nội dung prompt
+
+3. Skill tự động xuất hiện trong panel Claws — không cần khởi động lại
+
+## Gắn vào Claw
+
+Khi tạo hoặc chỉnh sửa một Claw, chọn một skill từ dropdown. Prompt của skill được gửi dưới dạng slash command khi Claw khởi động.
+
+## Lệnh
+
+Ngoài skill, Spec ADE còn khám phá slash command từ:
+- `.augment/commands/*.md` / `.claude/commands/*.md` (workspace)
+- `~/.augment/commands/*.md` / `~/.claude/commands/*.md` (user)
+
+Các lệnh sử dụng cùng định dạng YAML frontmatter và có thể dùng dưới dạng `/command-name` trong các chat session.

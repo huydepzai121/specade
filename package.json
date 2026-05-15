@@ -1,0 +1,10 @@
+{
+  "name": "spec-ade-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "python3 -m http.server 8080",
+    "docker:build": "docker build -t spec-ade-site .",
+    "docker:run": "docker run -p 8080:80 spec-ade-site"
+  }
+}

@@ -1,0 +1,86 @@
+---
+title: Tích hợp Git
+description: Workflow git đầy đủ — status, staging, commit, branch, merge editor và diff viewer.
+---
+
+# Tích hợp Git
+
+Spec ADE cung cấp tích hợp git toàn diện sử dụng phương pháp kết hợp: **git2** (libgit2 binding) cho đọc local nhanh và **git CLI** cho mutation và thao tác phức tạp.
+
+## Panel Git
+
+Panel git trong sidebar hiển thị:
+
+- **Branch hiện tại** và trạng thái HEAD
+- **File đã thay đổi** nhóm theo trạng thái (modified, added, deleted, untracked)
+- **Preview diff** cho mỗi file
+- **Nút stage/unstage** cho từng file hoặc hàng loạt
+
+## Thao tác
+
+| Thao tác | Phương thức | Mô tả |
+|----------|-------------|-------|
+| Status | git2 + CLI (porcelain v2) | Trạng thái file với phát hiện rename |
+| Stage/Unstage | CLI | Thêm hoặc xóa file khỏi index |
+| Commit | CLI | Tạo commit với message |
+| Fetch/Pull/Push | CLI | Thao tác remote |
+| Tạo/chuyển/xóa branch | CLI | Quản lý branch |
+| Stash | CLI | Lưu/khôi phục thay đổi đang làm |
+| Merge | CLI + git2 | Merge 3-way với giải quyết xung đột |
+
+## Merge editor
+
+Khi xảy ra xung đột merge, Spec ADE mở merge editor 3-way:
+
+```
+┌──────────┬──────────┬──────────┐
+│  Theirs  │  Result  │  Yours   │
+│ (remote) │ (merged) │ (local)  │
+└──────────┴──────────┴──────────┘
+```
+
+Tính năng:
+- Diff song song với syntax highlighting
+- Nhấn để chấp nhận "theirs" hoặc "yours" cho mỗi xung đột
+- Chỉnh sửa thủ công trong pane kết quả
+- Tự giải quyết cho thay đổi không xung đột
+- Đường kết nối giữa các phần tương ứng
+
+## Diff viewer
+
+Diff viewer hiển thị so sánh song song với:
+- Code syntax-highlighted ở cả hai bên
+- Highlight dòng thêm/xóa/sửa
+- Highlight diff trong từ
+- Điều hướng giữa các thay đổi
+- Đồng bộ cuộn giữa các pane
+
+## So sánh branch
+
+So sánh hai branch bất kỳ song song:
+- Danh sách diff cấp file
+- Diff viewer cho từng file
+- Lịch sử commit giữa các branch
+
+## Git log
+
+View git log hiển thị lịch sử commit với:
+- Đồ thị trực quan (đường branch/merge)
+- Chi tiết commit (tác giả, ngày, message, hash)
+- Thanh lọc để tìm kiếm commit
+- Sidebar cây branch
+
+## File watcher
+
+Spec ADE theo dõi filesystem cho thay đổi và cập nhật trạng thái git thời gian thực qua SSE (Server-Sent Events) tại `/api/projects/{id}/git/watch`.
+
+Watcher sử dụng `CoalesceMap` với phạm vi ưu tiên:
+- Refresh **Full** (ưu tiên cao nhất)
+- Refresh **Status**
+- Refresh **Branches** (ưu tiên thấp nhất)
+
+Filesystem mạng tự động chuyển sang chế độ poll-only.
+
+## Kết nối lại SSE
+
+Nếu kết nối SSE thất bại 3 lần, frontend chuyển sang polling cho cập nhật trạng thái git.

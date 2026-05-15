@@ -1,0 +1,40 @@
+---
+title: Tài liệu Spec ADE
+description: Môi trường phát triển AI để ship cùng đội ngũ agent.
+---
+
+# Chào mừng đến với Spec ADE
+
+Spec ADE là ứng dụng GUI full-stack cho các trợ lý lập trình AI. Nó cung cấp một workspace thống nhất nơi nhiều AI agent hoạt động song song — mỗi agent có terminal, worktree và quyền riêng — trong khi bạn vẫn kiểm soát từ một giao diện duy nhất.
+
+<CardGroup cols={2}>
+  <Card title="Cài đặt" icon="download" href="/getting-started/installation">
+    Cài đặt qua npm. Hỗ trợ macOS, Linux và Windows.
+  </Card>
+  <Card title="Bắt đầu nhanh" icon="rocket" href="/getting-started/quickstart">
+    Từ zero đến phiên agent đầu tiên trong dưới 5 phút.
+  </Card>
+  <Card title="Khái niệm cốt lõi" icon="book" href="/core-concepts/projects">
+    Tìm hiểu về project, session, claw, skill và worktree.
+  </Card>
+  <Card title="Tính năng" icon="sparkles" href="/features/chat-interface">
+    Khám phá giao diện chat, terminal, trình soạn thảo, tích hợp git và nhiều hơn nữa.
+  </Card>
+</CardGroup>
+
+## Điều gì làm Spec ADE khác biệt
+
+- **Workspace đa agent** — Chạy đội ngũ AI agent (gọi là Claw) trên một project. Bot review, viết doc, tạo test — mỗi agent cô lập, tất cả dưới một mái nhà.
+- **Git worktree tích hợp** — Mỗi agent có worktree riêng. Refactor song song mà không ảnh hưởng branch chính.
+- **Hệ thống Skill** — Đóng gói prompt + công cụ thành Skill tái sử dụng. Gắn vào bất kỳ Claw nào. Có phiên bản và chia sẻ được.
+- **Terminal-native** — Terminal PTY tích hợp với xterm emulation đầy đủ. Slash command, auto-approve và theo dõi token thời gian thực.
+- **UI kiểu JetBrains** — Hệ thống Pane với 9 loại tab, kéo thả resize, layout preset và phím tắt quen thuộc.
+
+## Tech stack
+
+| Layer | Công nghệ |
+|-------|-----------|
+| Frontend | Vue 3 + Quasar v2 + Pinia + TypeScript |
+| Backend | Rust 2024 + Axum + portable-pty + tokio |
+| Desktop | Tauri v2 (sidecar) |
+| Phân phối | npm (`@spec-ade/cli`), single binary |

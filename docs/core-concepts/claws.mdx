@@ -1,0 +1,81 @@
+---
+title: Claws
+description: Autonomous agent instances with permissions, scheduling, and lifecycle management.
+---
+
+# Claws
+
+A Claw is an autonomous agent instance that runs a skill against your project. Think of it as a background worker powered by an AI agent — it can review PRs, generate tests, write docs, or run any custom skill on a schedule.
+
+## Claw definition
+
+Each Claw is defined with:
+
+```json
+{
+  "id": "uuid",
+  "name": "review-bot",
+  "agentId": "builtin:claude",
+  "projectId": "project-uuid",
+  "skill": "review-pr",
+  "enabled": true,
+  "autoStart": true,
+  "keepAlive": true,
+  "restartOnTrigger": false,
+  "permissionMode": "auto_approve",
+  "schedules": [
+    {
+      "label": "Every morning",
+      "cron": "0 9 * * *",
+      "prompts": ["Review all open PRs"],
+      "enabled": true
+    }
+  ]
+}
+```
+
+## Lifecycle
+
+```
+Defined → Starting → Running → Idle → (Triggered) → Running → ...
+                                  ↓
+                               Stopped
+```
+
+- **Starting** — ACP connection spawned with ID `claw:{claw_id}`
+- **Running** — Skill sent as slash command, agent processing
+- **Idle** — Waiting for next trigger (schedule or manual)
+- **Stopped** — Manually stopped or error
+
+With `keepAlive: true`, a stopped Claw automatically restarts (up to 3 retries).
+
+## Permission modes
+
+| Mode | Behavior |
+|------|----------|
+| `auto_approve` | All agent requests approved automatically (default) |
+| `deny_all` | All requests denied — agent runs read-only |
+| `ask_via_ui` | Permission popup in the UI for each request |
+| `ask_via_telegram` | Permission request sent to Telegram for remote approval |
+
+## Scheduling
+
+Claws support multiple cron schedules. Each schedule has:
+
+- **Label** — human-readable name
+- **Cron expression** — standard 5-field cron (`0 9 * * *`)
+- **Prompts** — one or more prompts to send when triggered
+- **Enabled** — toggle individual schedules on/off
+
+Cron expressions are validated on save — invalid expressions are rejected.
+
+## API endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/claws` | List all claw definitions with runtime status |
+| `POST` | `/api/claws` | Create a new claw definition |
+| `PUT` | `/api/claws/{id}` | Update a claw definition |
+| `DELETE` | `/api/claws/{id}` | Delete a claw definition |
+| `POST` | `/api/claws/{id}/start` | Start a claw |
+| `POST` | `/api/claws/{id}/stop` | Stop a claw |

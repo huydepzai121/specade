@@ -1,0 +1,93 @@
+---
+title: Bắt đầu nhanh
+description: Phiên Spec ADE đầu tiên trong 5 phút.
+---
+
+# Bắt đầu nhanh
+
+Hướng dẫn này đưa bạn qua việc cài đặt Spec ADE, mở project, chat với AI agent và tạo Claw đầu tiên.
+
+## 1. Cài đặt
+
+```bash
+npm install -g @spec-ade/cli
+```
+
+## 2. Khởi chạy
+
+```bash
+spec-ade
+```
+
+Trình duyệt mở tại `http://localhost:3100`. Bạn sẽ thấy workspace Spec ADE với danh sách project trống.
+
+## 3. Mở project
+
+Nhấn nút **+** trong sidebar để thêm project. Trỏ đến bất kỳ thư mục nào trên filesystem:
+
+```
+/Users/you/my-project
+```
+
+Spec ADE index file tree (tôn trọng `.gitignore`) và hiển thị trong sidebar. Chỉ báo trạng thái git xuất hiện bên cạnh file đã thay đổi.
+
+## 4. Bắt đầu phiên chat
+
+Nhấn **New Session** trong thanh session. Chọn công cụ AI:
+
+- **Auggie** — Agent CLI của Augment
+- **Claude Code** — Agent CLI của Anthropic
+
+Nhập tin nhắn và nhấn Enter. Agent đọc codebase, gọi tool (bạn sẽ thấy mỗi tool call thời gian thực) và phản hồi với gợi ý hoặc thay đổi code.
+
+```
+You: Analyze the project structure and suggest improvements
+
+Agent: I'll scan the codebase to understand the architecture.
+  ✓ Read index.html
+  ✓ Glob **/*.ts
+
+This is a single-page React app using Babel standalone...
+```
+
+## 5. Tạo Claw
+
+Claw là instance agent tự động chạy skill trên project. Để tạo:
+
+1. Mở panel **Claws** từ sidebar
+2. Nhấn **New Claw**
+3. Cấu hình:
+   - **Name**: `review-bot`
+   - **Agent**: Chọn Auggie hoặc Claude Code
+   - **Skill**: Chọn skill (ví dụ: `review-pr`)
+   - **Permission Mode**: `auto_approve` (cho hoạt động tự động)
+4. Nhấn **Start**
+
+Claw chạy skill trên project. Bạn có thể theo dõi output thời gian thực, và nó sẽ idle khi xong — sẵn sàng cho trigger tiếp theo.
+
+## 6. Dùng git từ sidebar
+
+Mở panel **Git** để xem:
+
+- Branch hiện tại và trạng thái
+- File đã thay đổi với preview diff
+- Stage, unstage, commit và push — tất cả từ sidebar
+
+Mỗi worktree có branch riêng, nên agent có thể làm việc song song mà không xung đột.
+
+## Tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="Project" icon="folder" href="/core-concepts/projects">
+    Tìm hiểu cách project, file tree và state đa project hoạt động.
+  </Card>
+  <Card title="Claw" icon="robot" href="/core-concepts/claws">
+    Đi sâu vào agent tự động, quyền và lịch trình.
+  </Card>
+  <Card title="Skill" icon="wand-magic-sparkles" href="/core-concepts/skills">
+    Tạo và chia sẻ skill agent tái sử dụng.
+  </Card>
+  <Card title="Phím tắt" icon="keyboard" href="/features/keyboard-shortcuts">
+    Làm chủ hệ thống phím tắt kiểu JetBrains.
+  </Card>
+</CardGroup>

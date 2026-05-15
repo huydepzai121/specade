@@ -1,0 +1,81 @@
+---
+title: Claws
+description: Instance agent tự động với quyền, lịch trình và quản lý vòng đời.
+---
+
+# Claws
+
+Một Claw là một instance agent tự động chạy một Skill trên project của bạn. Hãy nghĩ về nó như một background worker được cung cấp bởi AI agent — nó có thể review PR, tạo test, viết tài liệu, hoặc chạy bất kỳ Skill tùy chỉnh nào theo lịch trình.
+
+## Định nghĩa Claw
+
+Mỗi Claw được định nghĩa với:
+
+```json
+{
+  "id": "uuid",
+  "name": "review-bot",
+  "agentId": "builtin:claude",
+  "projectId": "project-uuid",
+  "skill": "review-pr",
+  "enabled": true,
+  "autoStart": true,
+  "keepAlive": true,
+  "restartOnTrigger": false,
+  "permissionMode": "auto_approve",
+  "schedules": [
+    {
+      "label": "Every morning",
+      "cron": "0 9 * * *",
+      "prompts": ["Review all open PRs"],
+      "enabled": true
+    }
+  ]
+}
+```
+
+## Vòng đời
+
+```
+Defined → Starting → Running → Idle → (Triggered) → Running → ...
+                                  ↓
+                               Stopped
+```
+
+- **Starting** — Kết nối ACP được tạo với ID `claw:{claw_id}`
+- **Running** — Skill được gửi dưới dạng slash command, agent đang xử lý
+- **Idle** — Đang chờ trigger tiếp theo (lịch trình hoặc thủ công)
+- **Stopped** — Dừng thủ công hoặc lỗi
+
+Với `keepAlive: true`, một Claw bị dừng sẽ tự động khởi động lại (tối đa 3 lần thử).
+
+## Chế độ quyền
+
+| Chế độ | Hành vi |
+|--------|---------|
+| `auto_approve` | Tất cả yêu cầu của agent được tự động chấp thuận (mặc định) |
+| `deny_all` | Tất cả yêu cầu bị từ chối — agent chỉ chạy ở chế độ đọc |
+| `ask_via_ui` | Popup xác nhận quyền trong UI cho mỗi yêu cầu |
+| `ask_via_telegram` | Yêu cầu quyền được gửi đến Telegram để phê duyệt từ xa |
+
+## Lịch trình
+
+Claws hỗ trợ nhiều lịch trình cron. Mỗi lịch trình có:
+
+- **Label** — tên dễ đọc
+- **Cron expression** — cron 5 trường tiêu chuẩn (`0 9 * * *`)
+- **Prompts** — một hoặc nhiều prompt để gửi khi được kích hoạt
+- **Enabled** — bật/tắt từng lịch trình riêng lẻ
+
+Cron expression được xác thực khi lưu — các expression không hợp lệ sẽ bị từ chối.
+
+## API endpoint
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/claws` | Liệt kê tất cả định nghĩa claw với trạng thái runtime |
+| `POST` | `/api/claws` | Tạo định nghĩa claw mới |
+| `PUT` | `/api/claws/{id}` | Cập nhật định nghĩa claw |
+| `DELETE` | `/api/claws/{id}` | Xóa định nghĩa claw |
+| `POST` | `/api/claws/{id}/start` | Khởi động một claw |
+| `POST` | `/api/claws/{id}/stop` | Dừng một claw |

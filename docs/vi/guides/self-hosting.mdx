@@ -1,0 +1,106 @@
+---
+title: Tự triển khai
+description: Triển khai Spec ADE trên server riêng — binary, Docker hoặc cloud.
+---
+
+# Tự triển khai
+
+Spec ADE biên dịch thành một binary duy nhất nhúng toàn bộ frontend SPA. Không cần web server riêng, không cần Node.js runtime, không cần dependency bên ngoài khi chạy.
+
+## Binary đơn
+
+Triển khai đơn giản nhất:
+
+```bash
+# Cài đặt
+npm install -g @spec-ade/cli
+
+# Chạy
+spec-ade --host 0.0.0.0 --port 3100
+```
+
+Binary:
+- Phục vụ SPA nhúng trên tất cả route không khớp (với fallback `index.html`)
+- Expose REST API, WebSocket và SSE endpoint
+- Lưu toàn bộ state trong `~/.config/spec-ade/settings.json`
+- Tự mở trình duyệt (tắt với `--no-open`)
+
+## Docker
+
+```dockerfile
+FROM node:20-slim
+RUN npm install -g @spec-ade/cli
+EXPOSE 3100
+CMD ["spec-ade", "--host", "0.0.0.0", "--no-open"]
+```
+
+Hoặc với docker-compose:
+
+```yaml
+version: "3.8"
+services:
+  spec-ade:
+    image: node:20-slim
+    command: >
+      sh -c "npm install -g @spec-ade/cli && spec-ade --host 0.0.0.0 --no-open"
+    ports:
+      - "3100:3100"
+    volumes:
+      - ~/.config/spec-ade:/root/.config/spec-ade
+      - /path/to/projects:/projects
+```
+
+<Warning>
+  Mount thư mục project dưới dạng volume để Spec ADE có thể truy cập. File tree, thao tác git và terminal đều cần truy cập filesystem.
+</Warning>
+
+## Biến môi trường
+
+| Biến | Mặc định | Mô tả |
+|------|----------|-------|
+| `SPEC_ADE_HOST` | `0.0.0.0` | Địa chỉ bind |
+| `SPEC_ADE_PORT` | `3100` | Port server |
+| `VITE_API_BASE_URL` | same-origin | Base URL frontend API (cho setup reverse proxy) |
+
+## Kiểm soát truy cập
+
+Mặc định, Spec ADE không có xác thực — bất kỳ ai có URL đều có toàn quyền truy cập. Cho triển khai công khai, thiết lập access key:
+
+1. Lần đầu truy cập Spec ADE, bạn có thể đặt access key
+2. Key được hash với Argon2 và lưu trong `settings.json`
+3. Các request tiếp theo yêu cầu key qua session dựa trên cookie
+4. Reset với `spec-ade --reset-auth`
+
+<Warning>
+  Xác thực access key là bảo vệ cơ bản. Cho triển khai production trên mạng công khai, đặt Spec ADE sau reverse proxy với xác thực đúng cách (OAuth, SSO, v.v.).
+</Warning>
+
+## Reverse proxy
+
+Sau nginx:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name ade.example.com;
+
+    location / {
+        proxy_pass http://localhost:3100;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+Header `Upgrade` và `Connection` cần thiết cho hỗ trợ WebSocket.
+
+## Lưu trữ dữ liệu
+
+Toàn bộ state nằm trong `~/.config/spec-ade/`:
+- `settings.json` — project, session, claw, agent, toàn bộ cấu hình
+- `acp-history/` — lịch sử chat theo session (file JSON)
+
+Sao lưu thư mục này để bảo toàn cấu hình.

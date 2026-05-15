@@ -1,0 +1,54 @@
+---
+title: Worktrees
+description: Git worktrees for parallel agent work without branch conflicts.
+---
+
+# Worktrees
+
+Spec ADE integrates git worktrees so each agent can work on its own branch without interfering with others — or with your main branch.
+
+## What is a worktree?
+
+A git worktree is a separate working directory linked to the same repository. Each worktree has its own branch, index, and working tree, but shares the same `.git` object store.
+
+```
+my-project/                    ← main worktree (your branch)
+├── .git/
+├── src/
+└── ...
+
+my-project-worktrees/
+├── oauth-refactor/            ← agent 1's worktree
+│   ├── src/auth/oauth.ts      (new file)
+│   └── src/auth.ts            (modified)
+├── test-coverage/             ← agent 2's worktree
+│   └── tests/auth.spec.ts     (new file)
+└── docs-update/               ← agent 3's worktree
+    └── README.md              (modified)
+```
+
+## How it works in Spec ADE
+
+1. **Each Claw gets its own worktree** — when a Claw starts, it can operate in an isolated worktree
+2. **Parallel refactoring** — multiple agents modify code simultaneously without merge conflicts
+3. **Sidebar management** — diff, review, and merge worktree changes from the git panel
+4. **Branch per worktree** — each worktree is on its own branch, visible in the branch list
+
+## Benefits
+
+- **No stepping on main** — agents never modify your working branch directly
+- **Parallel execution** — run 5 agents on 5 different tasks simultaneously
+- **Easy review** — see each agent's changes as a clean diff against main
+- **Safe merging** — review and merge each worktree's branch when ready
+
+## Worktree lifecycle
+
+```
+Create → Agent works → Review diff → Merge branch → Clean up
+```
+
+Worktrees are managed through the git panel in the sidebar. You can:
+- View all active worktrees
+- See the diff for each worktree
+- Merge a worktree's branch into main
+- Delete a worktree when done

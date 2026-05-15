@@ -1,0 +1,106 @@
+---
+title: Self-Hosting
+description: Deploy Spec ADE on your own server — binary, Docker, or cloud.
+---
+
+# Self-Hosting
+
+Spec ADE compiles into a single binary that embeds the entire frontend SPA. No separate web server, no Node.js runtime, no external dependencies needed at runtime.
+
+## Single binary
+
+The simplest deployment:
+
+```bash
+# Install
+npm install -g @spec-ade/cli
+
+# Run
+spec-ade --host 0.0.0.0 --port 3100
+```
+
+The binary:
+- Serves the embedded SPA on all unmatched routes (with `index.html` fallback)
+- Exposes the REST API, WebSocket, and SSE endpoints
+- Stores all state in `~/.config/spec-ade/settings.json`
+- Auto-opens a browser (disable with `--no-open`)
+
+## Docker
+
+```dockerfile
+FROM node:20-slim
+RUN npm install -g @spec-ade/cli
+EXPOSE 3100
+CMD ["spec-ade", "--host", "0.0.0.0", "--no-open"]
+```
+
+Or with docker-compose:
+
+```yaml
+version: "3.8"
+services:
+  spec-ade:
+    image: node:20-slim
+    command: >
+      sh -c "npm install -g @spec-ade/cli && spec-ade --host 0.0.0.0 --no-open"
+    ports:
+      - "3100:3100"
+    volumes:
+      - ~/.config/spec-ade:/root/.config/spec-ade
+      - /path/to/projects:/projects
+```
+
+<Warning>
+  Mount your project directories as volumes so Spec ADE can access them. The file tree, git operations, and terminal all need filesystem access.
+</Warning>
+
+## Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SPEC_ADE_HOST` | `0.0.0.0` | Bind address |
+| `SPEC_ADE_PORT` | `3100` | Server port |
+| `VITE_API_BASE_URL` | same-origin | Frontend API base URL (for reverse proxy setups) |
+
+## Access control
+
+By default, Spec ADE has no authentication — anyone with the URL has full access. For public deployments, set up an access key:
+
+1. The first time you access Spec ADE, you can set an access key
+2. The key is hashed with Argon2 and stored in `settings.json`
+3. Subsequent requests require the key via cookie-based session
+4. Reset with `spec-ade --reset-auth`
+
+<Warning>
+  Access key auth is basic protection. For production deployments on public networks, put Spec ADE behind a reverse proxy with proper authentication (OAuth, SSO, etc.).
+</Warning>
+
+## Reverse proxy
+
+Behind nginx:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name ade.example.com;
+
+    location / {
+        proxy_pass http://localhost:3100;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+The `Upgrade` and `Connection` headers are required for WebSocket support.
+
+## Data storage
+
+All state lives in `~/.config/spec-ade/`:
+- `settings.json` — projects, sessions, claws, agents, all configuration
+- `acp-history/` — chat history per session (JSON files)
+
+Back up this directory to preserve your configuration.

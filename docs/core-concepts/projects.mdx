@@ -1,0 +1,64 @@
+---
+title: Projects
+description: How Spec ADE manages projects, file trees, and multi-project state.
+---
+
+# Projects
+
+A project in Spec ADE is a folder on your filesystem. When you add a project, Spec ADE indexes its file tree, tracks git status, and provides a workspace for AI agent sessions.
+
+## Adding a project
+
+Click the **+** button in the sidebar and select a folder. Spec ADE stores project metadata:
+
+- **Path** (unique identifier) — the absolute filesystem path
+- **Name** — derived from the folder name, editable
+- **Icon** — customizable project icon
+- **Sort order** — drag to reorder in the sidebar
+- **Created at / Last opened** — timestamps for sorting
+
+## File tree
+
+The sidebar shows a file tree for the active project. It uses the `ignore` crate (same as ripgrep) for gitignore-aware filtering, plus hardcoded exclusions for `node_modules` and `.git`.
+
+Features:
+- Git status indicators (modified, added, deleted) next to each file
+- Click to open in the file editor
+- Right-click for context menu (rename, delete, copy path)
+- Mobile: long-press (500ms) for context menu
+
+File paths are truncated with `direction: rtl` to keep the filename visible when paths are long.
+
+## Multi-project state
+
+Spec ADE supports multiple projects simultaneously. State is keyed by project ID:
+
+- Sessions, terminals, and file tabs are scoped to their project
+- Layout (pane arrangement) is saved per-project
+- Switching projects preserves the state of all other projects — terminals keep running, chat history is retained
+
+Special keys:
+- `__global__` — for global terminals not tied to any project
+- `__auggie__` — for Auggie CLI sessions
+
+## Data model
+
+All project data lives in `~/.config/spec-ade/settings.json`:
+
+```json
+{
+  "projects": [
+    {
+      "id": "uuid",
+      "path": "/Users/you/my-project",
+      "name": "my-project",
+      "icon": null,
+      "sortOrder": 0,
+      "createdAt": "2026-01-01T00:00:00Z",
+      "lastOpened": "2026-04-30T12:00:00Z"
+    }
+  ]
+}
+```
+
+Deleting a project cascades: all its sessions and layout data are removed.

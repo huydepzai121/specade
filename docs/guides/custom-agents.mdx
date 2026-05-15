@@ -1,0 +1,101 @@
+---
+title: Custom Agents
+description: Register and configure custom AI agents with PTY or ACP mode.
+---
+
+# Custom Agents
+
+Spec ADE ships with two built-in agents (Auggie and Claude Code) but supports adding any AI coding tool as a custom agent.
+
+## Agent registry
+
+Agents are defined in `~/.config/spec-ade/settings.json` under the `agents` array:
+
+```json
+{
+  "agents": [
+    {
+      "id": "builtin:auggie",
+      "name": "Auggie",
+      "mode": "pty"
+    },
+    {
+      "id": "builtin:claude",
+      "name": "Claude Code",
+      "mode": "pty"
+    }
+  ]
+}
+```
+
+## Adding a PTY agent
+
+PTY agents run as terminal processes. Spec ADE spawns them in a pseudo-terminal and communicates via raw I/O.
+
+```json
+{
+  "id": "custom:aider",
+  "name": "Aider",
+  "mode": "pty",
+  "command": "aider",
+  "args": ["--no-auto-commits"],
+  "env": {
+    "OPENAI_API_KEY": "sk-..."
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier (prefix with `custom:`) |
+| `name` | string | Display name in the UI |
+| `mode` | `"pty"` | Terminal-based communication |
+| `command` | string | Executable path or name |
+| `args` | string[] | Command-line arguments |
+| `env` | object | Environment variables |
+
+## Adding an ACP agent
+
+ACP agents implement the [Agent Client Protocol](https://github.com/anthropics/agent-client-protocol) for structured communication.
+
+```json
+{
+  "id": "custom:my-agent",
+  "name": "My Agent",
+  "mode": "acp",
+  "command": "/usr/local/bin/my-agent",
+  "args": ["--mode", "acp", "--project", "."],
+  "env": {
+    "API_KEY": "..."
+  }
+}
+```
+
+ACP agents get a richer UI experience:
+- Structured message display (not raw terminal output)
+- Tool call visualization with status indicators
+- Permission request dialogs
+- Execution plan display
+- Thought/reasoning display
+
+## PTY vs ACP: when to use which
+
+| Use PTY when... | Use ACP when... |
+|-----------------|-----------------|
+| The tool is a CLI that reads/writes to stdin/stdout | The tool implements the ACP protocol |
+| You want raw terminal access | You want structured tool call display |
+| The tool doesn't support ACP | You need permission management |
+| Quick integration (any CLI works) | Rich UI integration |
+
+## Command resolution
+
+Spec ADE resolves commands cross-platform:
+- **Unix**: direct execution
+- **Windows**: searches for `.exe`, `.cmd`, `.bat`, `.ps1` extensions, caches resolved paths
+
+## Testing your agent
+
+1. Add the agent to `settings.json`
+2. Restart Spec ADE (or it picks up changes on next session creation)
+3. Create a new session and select your agent from the dropdown
+4. Verify the agent starts and responds to messages

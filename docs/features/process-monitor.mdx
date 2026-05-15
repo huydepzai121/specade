@@ -1,0 +1,53 @@
+---
+title: Process Monitor
+description: System metrics, GPU monitoring, process management, and sparkline charts.
+---
+
+# Process Monitor
+
+Spec ADE includes a built-in process monitor that shows system metrics, running processes, and optional GPU information.
+
+## System metrics
+
+The monitor displays real-time system information via the `sysinfo` crate:
+
+- **CPU usage** — per-core and aggregate
+- **Memory** — used, total, percentage
+- **Processes** — list of running processes with CPU/memory usage
+
+Metrics are polled every 3 seconds.
+
+## GPU monitoring
+
+On systems with NVIDIA GPUs, Spec ADE uses **NVML** (NVIDIA Management Library) to show:
+
+- GPU utilization percentage
+- GPU memory usage
+- GPU temperature
+
+GPU monitoring degrades gracefully — if NVML is not available, GPU metrics are simply omitted.
+
+## Process list
+
+The process table shows:
+
+| Column | Description |
+|--------|-------------|
+| PID | Process ID |
+| Name | Process name |
+| CPU % | CPU usage percentage |
+| Memory | Memory usage |
+| Status | Running, sleeping, etc. |
+
+Features:
+- **Sort** by any column (click header)
+- **Filter** by process name
+- **Kill** a process (with confirmation)
+
+## Sparkline charts
+
+Each metric includes a sparkline chart showing recent history — a compact line graph that fits in a single row. Sparklines use the `MiniSparkline` component.
+
+## Implementation
+
+The backend uses `spawn_blocking` + `blocking_lock()` on the async mutex for system metrics to avoid blocking the tokio runtime. The `/api/system/metrics` endpoint returns CPU, memory, and process data.

@@ -1,0 +1,68 @@
+---
+title: Pane System
+description: Recursive pane layout with 9 tab kinds, split, resize, and presets.
+---
+
+# Pane System
+
+Spec ADE uses a recursive pane tree for its workspace layout — similar to how JetBrains IDEs handle editor splits. You can split any pane horizontally or vertically, creating a flexible grid of panels.
+
+## Tab kinds
+
+Each pane can host tabs of 9 different kinds:
+
+| Kind | Description | Shortcut |
+|------|-------------|----------|
+| **Session** | Chat with an AI agent | — |
+| **File** | Code editor (CodeMirror 6) | Click file in tree |
+| **Spec** | OpenSpec document viewer | — |
+| **Merge** | 3-way merge editor | From git conflicts |
+| **Diff** | Side-by-side diff viewer | From git panel |
+| **Compare** | Branch comparison view | From git panel |
+| **Git Log** | Commit history with graph | From git panel |
+| **Terminal** | Standalone terminal | — |
+| **Monitor** | Process/system monitor | — |
+
+## Splitting panes
+
+- **Split right**: `Ctrl+\` (macOS: `⌘+\`)
+- **Split down**: `Ctrl+Shift+\` (macOS: `⌘+⇧+\`)
+
+You can also drag a tab to the edge of a pane to split it.
+
+## Pane tree structure
+
+The layout is a recursive tree of two node types:
+
+- **AxisNode** — a split container (horizontal or vertical) with child members
+- **PaneNode** — a leaf node containing a tab bar and content area
+
+```
+AxisNode (horizontal)
+├── PaneNode [Session: "Auggie 1", File: "index.ts"]
+└── AxisNode (vertical)
+    ├── PaneNode [File: "auth.ts"]
+    └── PaneNode [Terminal: "bash"]
+```
+
+## Resize
+
+Drag the handle between panes to resize. The pane tree recalculates proportions automatically.
+
+## Layout presets
+
+Spec ADE includes built-in layout presets:
+
+- **Single** — one pane, full width
+- **Side by side** — two panes, horizontal split
+- **Grid** — four panes in a 2×2 grid
+
+You can also save custom presets and switch between them.
+
+## Persistence
+
+Layouts are saved per-project in `settings.json` under `projectLayouts`. A global `lastLayout` stores the most recent layout (with tabs stripped) as a template for new projects.
+
+## Auto-unsplit
+
+When you close the last tab in a pane, the pane is automatically removed and its parent unsplits. This keeps the layout clean without manual cleanup.

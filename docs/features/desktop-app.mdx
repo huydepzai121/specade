@@ -1,0 +1,83 @@
+---
+title: Desktop App
+description: Tauri v2 native desktop app and PWA support.
+---
+
+# Desktop App
+
+Spec ADE is available as a native desktop application via Tauri v2, in addition to the browser-based and PWA modes.
+
+## Three ways to run
+
+| Mode | How | Best for |
+|------|-----|----------|
+| **Browser** | `spec-ade` → opens `localhost:3100` | Development, remote access |
+| **PWA** | Install from browser | Standalone window, no Tauri needed |
+| **Desktop (Tauri)** | Download native app | Full native experience |
+
+## Tauri sidecar architecture
+
+The desktop app uses Tauri v2 with a **sidecar** pattern:
+
+```
+┌─────────────────────────────┐
+│     Tauri Window (WebView)  │
+│     ┌───────────────────┐   │
+│     │   Vue 3 SPA       │   │
+│     │   (from dist/spa) │   │
+│     └───────────────────┘   │
+├─────────────────────────────┤
+│     Tauri Rust Shell        │
+│     ┌───────────────────┐   │
+│     │  Sidecar Process  │   │
+│     │  (spec-ade binary)│   │
+│     └───────────────────┘   │
+└─────────────────────────────┘
+```
+
+The Tauri shell:
+1. Starts the `spec-ade` backend binary as a sidecar process
+2. Waits for the health endpoint to respond
+3. Loads the SPA in a native WebView window
+4. Manages the sidecar lifecycle (start, health check, restart)
+
+## Platform support
+
+| Platform | Status | Bundle formats |
+|----------|--------|---------------|
+| macOS | Primary | `.app`, `.dmg` |
+| Windows | Secondary | `.exe` (NSIS installer) |
+| Linux | Nice-to-have | `.AppImage`, `.deb`, `.rpm` |
+
+## Window configuration
+
+- Default size: 1280×800
+- Minimum size: 900×600
+- Title: "Spec ADE"
+- Bundle identifier: `com.spec-ade.desktop`
+
+## PWA support
+
+Spec ADE also works as a Progressive Web App:
+
+- **Install prompt** — browsers offer to install the app
+- **Standalone window** — runs in its own window without browser chrome
+- **Push notifications** — get notified when long-running agent tasks complete
+- **Offline caching** — static assets cached via Workbox service worker
+
+Build the PWA version:
+```bash
+bun run build:pwa
+```
+
+## Building the desktop app
+
+```bash
+# Development
+cd src-tauri && bunx tauri dev --no-dev-server-wait
+
+# Production build
+cd src-tauri && bunx tauri build
+```
+
+The build produces platform-specific installers in `src-tauri/target/release/bundle/`.
