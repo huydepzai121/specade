@@ -16,7 +16,7 @@ The simplest deployment:
 npm install -g @spec-ade/cli
 
 # Run
-spec-ade --host 0.0.0.0 --port 3100
+spec-ade --host 0.0.0.0 --port 4123
 ```
 
 The binary:
@@ -30,7 +30,7 @@ The binary:
 ```dockerfile
 FROM node:20-slim
 RUN npm install -g @spec-ade/cli
-EXPOSE 3100
+EXPOSE 4123
 CMD ["spec-ade", "--host", "0.0.0.0", "--no-open"]
 ```
 
@@ -44,7 +44,7 @@ services:
     command: >
       sh -c "npm install -g @spec-ade/cli && spec-ade --host 0.0.0.0 --no-open"
     ports:
-      - "3100:3100"
+      - "4123:4123"
     volumes:
       - ~/.config/spec-ade:/root/.config/spec-ade
       - /path/to/projects:/projects
@@ -59,7 +59,7 @@ services:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SPEC_ADE_HOST` | `0.0.0.0` | Bind address |
-| `SPEC_ADE_PORT` | `3100` | Server port |
+| `SPEC_ADE_PORT` | `4123` | Server port |
 | `VITE_API_BASE_URL` | same-origin | Frontend API base URL (for reverse proxy setups) |
 
 ## Access control
@@ -85,7 +85,7 @@ server {
     server_name ade.example.com;
 
     location / {
-        proxy_pass http://localhost:3100;
+        proxy_pass http://localhost:4123;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";

@@ -46,14 +46,14 @@ spec-ade --version
 spec-ade
 ```
 
-Lệnh này khởi động backend server tại `http://localhost:3100` và tự động mở trình duyệt.
+Lệnh này khởi động backend server tại `http://localhost:4123` và tự động mở trình duyệt.
 
 ## Tham số CLI
 
 | Flag | Biến môi trường | Mặc định | Mô tả |
 |------|-----------------|----------|-------|
 | `-H`, `--host` | `SPEC_ADE_HOST` | `0.0.0.0` | Host để bind |
-| `-p`, `--port` | `SPEC_ADE_PORT` | `3100` | Port để bind |
+| `-p`, `--port` | `SPEC_ADE_PORT` | `4123` | Port để bind |
 | `--no-open` | — | `false` | Không mở trình duyệt khi khởi động |
 | `--reset-auth` | — | `false` | Xóa access key và session secret |
 
@@ -80,7 +80,7 @@ spec-ade --reset-auth
 | Biến | Mặc định | Mô tả |
 |------|----------|-------|
 | `SPEC_ADE_HOST` | `0.0.0.0` | Host để bind backend server |
-| `SPEC_ADE_PORT` | `3100` | Port cho backend server |
+| `SPEC_ADE_PORT` | `4123` | Port cho backend server |
 | `VITE_API_BASE_URL` | same-origin | Base URL cho frontend API call |
 
 ## Ứng dụng desktop
