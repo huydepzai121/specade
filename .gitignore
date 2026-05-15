@@ -2,7 +2,7 @@
 **/.DS_Store
 .playwright-mcp/
 test.txt
-*.png
+/*.png
 augment-docs-snapshot.md
 lumide-landing-snapshot.md
 spec-ade-landing 3/
